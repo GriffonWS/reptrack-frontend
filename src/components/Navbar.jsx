@@ -69,7 +69,7 @@ const Navbar = ({ toggleSidebar, sidebarOpen }) => {
             {/* Profile Dropdown Menu */}
             {profileDropdownOpen && (
               <div className="profile-dropdown">
-                <a href="#" className="dropdown-item">
+                <a href="/dashboard/profile" className="dropdown-item">
                   <FiUser size={18} />
                   <span>My Account</span>
                 </a>

@@ -37,9 +37,9 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         <ul className="sidebar-menu">
           {/* Dashboard */}
           <li className="menu-item">
-            <a href="#" className="menu-link active">
+            <a href="/dashboard/overview" className="menu-link active">
               <span className="menu-icon">🏠</span>
-              <span>Dashboard</span>
+              <span>Overview</span>
             </a>
           </li>
 
@@ -58,7 +58,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             {openDropdowns.userManagement && (
               <ul className="submenu">
                 <li className="submenu-item">
-                  <a href="#" className="submenu-link">All Members</a>
+                  <a href="/dashboard/all_admins" className="submenu-link">All Members</a>
                 </li>
               </ul>
             )}
@@ -79,10 +79,10 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             {openDropdowns.equipmentManagement && (
               <ul className="submenu">
                 <li className="submenu-item">
-                  <a href="#" className="submenu-link">Aerobic Equipment</a>
+                  <a href="/dashboard/all_aerobic" className="submenu-link">Aerobic Equipment</a>
                 </li>
                 <li className="submenu-item">
-                  <a href="#" className="submenu-link">Exercise Equipment</a>
+                  <a href="/dashboard/all_equipments" className="submenu-link">Exercise Equipment</a>
                 </li>
               </ul>
             )}
@@ -90,7 +90,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
           {/* Communication and Support */}
           <li className="menu-item">
-            <a href="#" className="menu-link">
+            <a href="/dashboard/support" className="menu-link">
               <span className="menu-icon">✉️</span>
               <span>Communication and Support</span>
             </a>

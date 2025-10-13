@@ -1,0 +1,270 @@
+ * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        
+
+        .myprofile__container {
+          max-width: 1000px;
+          margin: 0 auto;
+        }
+
+        .myprofile__title {
+          font-size: 24px;
+          font-weight: 600;
+          color: #2c3e50;
+          margin-bottom: 25px;
+        }
+
+        .myprofile__header-card {
+          background-color: white;
+          border-radius: 8px;
+          padding: 25px;
+          margin-bottom: 25px;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .myprofile__header-content {
+          display: flex;
+          align-items: center;
+          gap: 20px;
+        }
+
+        .myprofile__avatar {
+          width: 100px;
+          height: 100px;
+          border-radius: 50%;
+          object-fit: cover;
+          border: 3px solid #f0f0f0;
+        }
+
+        .myprofile__header-info {
+          flex: 1;
+        }
+
+        .myprofile__header-name {
+          font-size: 20px;
+          font-weight: 600;
+          color: #2c3e50;
+          margin-bottom: 4px;
+        }
+
+        .myprofile__header-role {
+          font-size: 14px;
+          color: #666;
+          margin-bottom: 6px;
+        }
+
+        .myprofile__header-location {
+          font-size: 13px;
+          color: #999;
+          display: flex;
+          align-items: center;
+          gap: 4px;
+        }
+
+        .myprofile__section-card {
+          background-color: white;
+          border-radius: 8px;
+          padding: 30px;
+          margin-bottom: 25px;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .myprofile__section-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 25px;
+          padding-bottom: 15px;
+          border-bottom: 1px solid #f0f0f0;
+        }
+
+        .myprofile__section-title {
+          font-size: 18px;
+          font-weight: 600;
+          color: #2c3e50;
+        }
+
+        .myprofile__edit-btn {
+          background-color: #ff9f43;
+          color: white;
+          border: none;
+          padding: 8px 16px;
+          border-radius: 4px;
+          font-size: 13px;
+          font-weight: 600;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          transition: background-color 0.3s ease;
+        }
+
+        .myprofile__edit-btn:hover {
+          background-color: #ff8c00;
+        }
+
+        .myprofile__info-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          gap: 30px;
+        }
+
+        .myprofile__info-item {
+          display: flex;
+          flex-direction: column;
+        }
+
+        .myprofile__info-label {
+          font-size: 12px;
+          color: #999;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 0.5px;
+          margin-bottom: 8px;
+        }
+
+        .myprofile__info-value {
+          font-size: 15px;
+          color: #2c3e50;
+          font-weight: 500;
+        }
+
+        /* Two column layout for address section */
+        .myprofile__info-grid-2col {
+          display: grid;
+          grid-template-columns: 1fr 1fr 1fr;
+          gap: 30px;
+        }
+
+        /* Tablet view */
+        @media (max-width: 768px) {
+          .myprofile__wrapper {
+            padding: 15px;
+          }
+
+          .myprofile__title {
+            font-size: 20px;
+            margin-bottom: 20px;
+          }
+
+          .myprofile__header-card {
+            padding: 20px;
+            margin-bottom: 20px;
+          }
+
+          .myprofile__header-content {
+            gap: 15px;
+          }
+
+          .myprofile__avatar {
+            width: 80px;
+            height: 80px;
+          }
+
+          .myprofile__header-name {
+            font-size: 18px;
+          }
+
+          .myprofile__section-card {
+            padding: 20px;
+            margin-bottom: 20px;
+          }
+
+          .myprofile__section-title {
+            font-size: 16px;
+          }
+
+          .myprofile__info-grid,
+          .myprofile__info-grid-2col {
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+          }
+
+          .myprofile__section-header {
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+          }
+        }
+
+        /* Mobile view */
+        @media (max-width: 480px) {
+          .myprofile__wrapper {
+            padding: 12px;
+            background-color: #f8f9fa;
+          }
+
+          .myprofile__container {
+            padding: 0;
+          }
+
+          .myprofile__title {
+            font-size: 18px;
+            margin-bottom: 15px;
+          }
+
+          .myprofile__header-card {
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+          }
+
+          .myprofile__header-content {
+            gap: 12px;
+          }
+
+          .myprofile__avatar {
+            width: 70px;
+            height: 70px;
+          }
+
+          .myprofile__header-name {
+            font-size: 16px;
+          }
+
+          .myprofile__header-role {
+            font-size: 13px;
+          }
+
+          .myprofile__header-location {
+            font-size: 12px;
+          }
+
+          .myprofile__section-card {
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 6px;
+          }
+
+          .myprofile__section-title {
+            font-size: 15px;
+          }
+
+          .myprofile__section-header {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+          }
+
+          .myprofile__edit-btn {
+            padding: 6px 12px;
+            font-size: 12px;
+          }
+
+          .myprofile__info-grid,
+          .myprofile__info-grid-2col {
+            grid-template-columns: 1fr;
+            gap: 15px;
+          }
+
+          .myprofile__info-label {
+            font-size: 11px;
+            margin-bottom: 6px;
+          }
+
+          .myprofile__info-value {
+            font-size: 14px;
+          }
+        }
