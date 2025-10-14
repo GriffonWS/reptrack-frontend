@@ -25,7 +25,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           <div className="logo-icon">
             <img src={logo} alt="" />
           </div>
-          <span className="logo-text">Reptrack</span>
+          
         </div>
         <button className="sidebar-close" onClick={toggleSidebar}>
           ✕
