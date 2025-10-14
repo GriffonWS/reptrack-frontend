@@ -1,0 +1,182 @@
+:root {
+  --popp: 'Inter', sans-serif;
+  --primary-color: #ffb700;
+  --primary-black: #ffffff;
+  --secondary-black: #ccc;
+  --third-black: #a0a3b1;
+  --panel-bg: #2d2d44;
+  --hover-bg: #393957;
+  --input-bg: #1f1f2f;
+  --border-light: rgba(255, 255, 255, 0.06);
+}
+
+/* 🌑 Table Container */
+.table-div {
+  background-color: var(--panel-bg);
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  font-family: var(--popp);
+  color: #ffffff;
+}
+
+/* 🔍 Table Top (Search & Heading) */
+.table-top {
+  padding: 16px 20px;
+  background-color: var(--panel-bg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-light);
+  flex-wrap: wrap;
+}
+
+.table-top h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--primary-black);
+}
+
+.table-search-input {
+  display: flex;
+  align-items: center;
+  background-color: var(--input-bg);
+  border: 1px solid var(--border-light);
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.table-search-input input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #ffffff;
+  font-size: 0.9rem;
+  width: 180px;
+}
+
+/* 📄 Table Main Content */
+.table-main {
+  width: 100%;
+}
+
+.table-inner {
+  overflow-x: auto;
+}
+
+.table-inner::-webkit-scrollbar {
+  height: 6px;
+}
+.table-inner::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 6px;
+}
+
+/* 📊 Table Structure */
+.table-body {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-body th {
+  background-color: var(--input-bg);
+  color: var(--primary-black);
+  padding: 14px 12px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.table-body td {
+  padding: 12px 10px;
+  font-size: 0.85rem;
+  text-align: center;  /* ✅ Fix for readability */
+  color: var(--secondary-black);
+  font-weight: 500;
+  background-color: var(--panel-bg);
+  border-bottom: 1px solid var(--border-light);
+  white-space: nowrap;            /* ✅ Prevent vertical wrapping */
+  overflow: hidden;               /* ✅ Hide overflowed text */
+  text-overflow: ellipsis;        /* ✅ Show ellipsis */
+  max-width: 500px;               /* ✅ Set logical cell width */
+}
+
+
+.table-body tr:hover td {
+  background-color: var(--hover-bg);
+}
+
+/* 🔻 Table Bottom (Pagination + Entries) */
+.table-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 20px;
+  background-color: var(--panel-bg);
+  font-size: 0.8rem;
+  color: var(--secondary-black);
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.table-bottom .tb-left,
+.table-bottom .tb-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.table-bottom select {
+  background-color: var(--input-bg);
+  color: #fff;
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  outline: none;
+  font-family: var(--popp);
+}
+.table-bottom .tb-left button {
+  background-color: var(--input-bg);
+  color: #fff;
+  border: 1px solid var(--border-light);
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-family: var(--popp);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 60px;
+}
+
+.table-bottom .tb-left button:hover {
+  background-color: var(--hover-bg);
+}
+
+.table-bottom .tb-left button:disabled {
+  background-color: #3a3a50;
+  color: #888;
+  cursor: not-allowed;
+  border-color: #444;
+  opacity: 0.6;
+}
+
+/* 📱 Responsive */
+@media only screen and (max-width: 600px) {
+  .table-top {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .table-bottom {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .table-search-input input {
+    width: 100%;
+  }
+}

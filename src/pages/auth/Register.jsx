@@ -1,26 +1,39 @@
 import React, { useState } from 'react'
 import { FaDumbbell, FaEye, FaEyeSlash } from 'react-icons/fa'
-import './auth.css' // Reuse the same styles
+import { registerAdmin } from '../../services/auth/authServices'
+import './auth.css'
 
 const Register = () => {
   const [firstName, setFirstName] = useState('')
   const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [role, setRole] = useState('admin')
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setIsLoading(true)
-    setTimeout(() => {
+    setError('')
+
+    try {
+      await registerAdmin({
+        email,
+        firstname: firstName,
+        lastname: lastName,
+        password,
+        role
+      })
+
+      alert('Registration successful!')
+      window.location.href = '/dashboard'
+    } catch (err) {
+      setError(err.message)
+    } finally {
       setIsLoading(false)
-      alert(`Registered as ${firstName} ${lastName} (${email})`)
-      setFirstName('')
-      setLastName('')
-      setEmail('')
-      setPassword('')
-    }, 1000)
+    }
   }
 
   return (
@@ -36,8 +49,20 @@ const Register = () => {
                 <div className="logo-text">Reptrack</div>
               </div>
 
-              <div className="login-form">
-                {/* Name fields side by side */}
+              <form className="login-form" onSubmit={handleSubmit}>
+                {error && (
+                  <div style={{ 
+                    padding: '10px', 
+                    marginBottom: '15px', 
+                    backgroundColor: '#fee', 
+                    color: '#c00',
+                    borderRadius: '5px',
+                    fontSize: '14px'
+                  }}>
+                    {error}
+                  </div>
+                )}
+
                 <div className="name-row">
                   <div className="form-group half">
                     <label className="form-label">First Name</label>
@@ -95,14 +120,13 @@ const Register = () => {
                 </div>
 
                 <button
-                  type="button"
+                  type="submit"
                   className="submit-btn"
                   disabled={isLoading}
-                  onClick={handleSubmit}
                 >
                   {isLoading ? 'Creating account...' : 'Sign up'}
                 </button>
-              </div>
+              </form>
 
               <div className="signup-link">
                 Already have an account?{' '}
