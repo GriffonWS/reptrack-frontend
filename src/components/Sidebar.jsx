@@ -2,7 +2,11 @@
 import React from 'react';
 import { useState } from 'react';
 import '../pages/dashboard/Dashboard.css';
-import logo from '../assets/logo (1).png';
+import logos from '../assets/logo-H.png';
+import { LiaChartBarSolid } from "react-icons/lia";
+import { FaUsers } from "react-icons/fa";
+import { CgGym } from "react-icons/cg";
+import { BiSupport } from "react-icons/bi";
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
   const [openDropdowns, setOpenDropdowns] = useState({
@@ -23,7 +27,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       <div className="sidebar-logo">
         <div className="logo-content">
           <div className="logo-icon">
-            <img src={logo} alt="" />
+            <img src={logos} alt="" />
           </div>
           
         </div>
@@ -38,7 +42,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           {/* Dashboard */}
           <li className="menu-item">
             <a href="/dashboard/overview" className="menu-link active">
-              <span className="menu-icon">🏠</span>
+              <span className="menu-icon"><LiaChartBarSolid /></span>
               <span>Overview</span>
             </a>
           </li>
@@ -49,7 +53,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
               className="menu-link dropdown-toggle"
               onClick={() => toggleDropdown('userManagement')}
             >
-              <span className="menu-icon">👥</span>
+              <span className="menu-icon"><FaUsers /></span>
               <span>User Management</span>
               <span className={`dropdown-arrow ${openDropdowns.userManagement ? 'open' : ''}`}>
                 ▼
@@ -70,7 +74,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
               className="menu-link dropdown-toggle"
               onClick={() => toggleDropdown('equipmentManagement')}
             >
-              <span className="menu-icon">🏋️</span>
+              <span className="menu-icon"><CgGym /></span>
               <span>Equipment Management</span>
               <span className={`dropdown-arrow ${openDropdowns.equipmentManagement ? 'open' : ''}`}>
                 ▼
@@ -91,7 +95,8 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
           {/* Communication and Support */}
           <li className="menu-item">
             <a href="/dashboard/support" className="menu-link">
-              <span className="menu-icon">✉️</span>
+              <span className="menu-icon"><BiSupport />
+</span>
               <span>Communication and Support</span>
             </a>
           </li>

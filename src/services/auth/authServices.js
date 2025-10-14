@@ -133,7 +133,7 @@ export const getAdminUser = () => {
  */
 export const registerAdmin = async (adminData) => {
   try {
-    const response = await axiosInstance.post("/register", adminData);
+    const response = await axiosInstance.post("/register-admin", adminData);
 
     if (response.data) {
       saveTokens(response.data.token, response.data.refreshToken);
@@ -142,7 +142,10 @@ export const registerAdmin = async (adminData) => {
 
     return response.data;
   } catch (error) {
-    console.error("❌ Registration Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Registration Error:",
+      error.response?.data || error.message
+    );
     throw error.response?.data || error;
   }
 };
@@ -152,7 +155,10 @@ export const registerAdmin = async (adminData) => {
  */
 export const loginAdmin = async (email, password) => {
   try {
-    const response = await axiosInstance.post("/login", { email, password });
+    const response = await axiosInstance.post("/login-admin", {
+      email,
+      password,
+    });
 
     if (response.data) {
       saveTokens(response.data.token, response.data.refreshToken);
@@ -179,7 +185,10 @@ export const getAdminProfile = async () => {
 
     return response.data;
   } catch (error) {
-    console.error("❌ Get Profile Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Get Profile Error:",
+      error.response?.data || error.message
+    );
     throw error.response?.data || error;
   }
 };
@@ -197,7 +206,10 @@ export const updateAdminProfile = async (updateData) => {
 
     return response.data;
   } catch (error) {
-    console.error("❌ Update Profile Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Update Profile Error:",
+      error.response?.data || error.message
+    );
     throw error.response?.data || error;
   }
 };
@@ -225,7 +237,10 @@ export const refreshAccessToken = async () => {
 
     return false;
   } catch (error) {
-    console.error("❌ Token Refresh Error:", error.response?.data || error.message);
+    console.error(
+      "❌ Token Refresh Error:",
+      error.response?.data || error.message
+    );
     clearTokens();
     return false;
   }
@@ -333,7 +348,8 @@ export const validateEmail = (email) => {
  * Validate password strength
  */
 export const validatePassword = (password) => {
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+  const passwordRegex =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
   return passwordRegex.test(password);
 };
 

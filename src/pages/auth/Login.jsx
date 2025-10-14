@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { FaDumbbell, FaEye, FaEyeSlash } from 'react-icons/fa'
+import logo from '../../assets/logo (1).png'
 import './auth.css'
 
 const Login = () => {
@@ -14,6 +15,7 @@ const Login = () => {
     setTimeout(() => {
       setIsLoading(false)
       alert(`Logged in with ${email}`)
+      window.location.href = '/dashboard'
       setEmail('')
       setPassword('')
     }, 1000)
@@ -29,9 +31,9 @@ const Login = () => {
             <div className="login-form-wrapper">
               <div className="logo">
                 <div className="logo-icon">
-                  <FaDumbbell />
+                 <img src={logo} alt="" />
                 </div>
-                <div className="logo-text">Reptrack</div>
+              
               </div>
 
               <div className="login-form">

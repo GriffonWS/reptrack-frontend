@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { FiSearch, FiMail, FiUser, FiCalendar, FiMessageSquare, FiAlertCircle } from 'react-icons/fi'
+import { FiSearch, FiMail, FiCalendar, FiAlertCircle, FiLoader } from 'react-icons/fi'
+import { getAllSupports, getSupportBySenderId } from '../../../services/supportService.js'
 import './Support.css'
 
 const Support = () => {
@@ -10,7 +11,7 @@ const Support = () => {
   const [error, setError] = useState('')
   const [selectedSupport, setSelectedSupport] = useState(null)
 
-  // Fetch all support queries
+  // Fetch all support queries on component mount
   useEffect(() => {
     fetchAllSupports()
   }, [])
@@ -19,15 +20,14 @@ const Support = () => {
     setLoading(true)
     setError('')
     try {
-      // Replace with your actual API endpoint
-      const response = await fetch('/api/communication-support/all')
-      if (!response.ok) throw new Error('Failed to fetch supports')
-      const data = await response.json()
+      const data = await getAllSupports()
       setAllSupports(data)
       setFilteredSupports(data)
     } catch (err) {
-      setError(err.message)
-      // Mock data for demonstration
+      console.error('Error fetching supports:', err)
+      setError(err.message || 'Failed to fetch support queries')
+      
+      // Mock data for demonstration if API fails
       const mockData = [
         {
           id: 1,
@@ -60,6 +60,7 @@ const Support = () => {
 
   const handleSearch = async (e) => {
     e.preventDefault()
+    
     if (!searchSenderId.trim()) {
       setFilteredSupports(allSupports)
       return
@@ -68,17 +69,11 @@ const Support = () => {
     setLoading(true)
     setError('')
     try {
-      // Replace with your actual API endpoint
-      const response = await fetch('/api/communication-support/by-sender', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sender_id: searchSenderId })
-      })
-      if (!response.ok) throw new Error('Support query not found')
-      const data = await response.json()
+      const data = await getSupportBySenderId(searchSenderId)
       setFilteredSupports([data])
     } catch (err) {
-      setError(err.message)
+      console.error('Error searching support:', err)
+      setError(err.message || 'Support query not found')
       setFilteredSupports([])
     } finally {
       setLoading(false)
@@ -104,8 +99,7 @@ const Support = () => {
 
   return (
     <div className="support__wrapper">
-
-       <div className="support__container">
+      <div className="support__container">
         <h1 className="support__title">Support Queries</h1>
         <p className="support__subtitle">Manage and view all customer support requests</p>
 
@@ -122,11 +116,19 @@ const Support = () => {
                 onChange={(e) => setSearchSenderId(e.target.value)}
               />
             </div>
-            <button onClick={handleSearch} className="support__search-btn">
+            <button 
+              onClick={handleSearch} 
+              className="support__search-btn"
+              disabled={loading}
+            >
               <FiSearch size={18} />
               Search
             </button>
-            <button onClick={handleReset} className="support__reset-btn">
+            <button 
+              onClick={handleReset} 
+              className="support__reset-btn"
+              disabled={loading}
+            >
               Reset
             </button>
           </div>
@@ -136,12 +138,17 @@ const Support = () => {
         {error && (
           <div className="support__error">
             <FiAlertCircle size={20} />
-            {error}
+            <span>{error}</span>
           </div>
         )}
 
         {/* Loading State */}
-        {loading && <div className="support__loading">Loading support queries...</div>}
+        {loading && (
+          <div className="support__loading">
+            <FiLoader size={20} className="support__loading-icon" />
+            Loading support queries...
+          </div>
+        )}
 
         {/* No Results */}
         {!loading && filteredSupports.length === 0 && (
@@ -184,8 +191,14 @@ const Support = () => {
 
         {/* Modal for full view */}
         {selectedSupport && (
-          <div className="support__modal-overlay" onClick={() => setSelectedSupport(null)}>
-            <div className="support__modal" onClick={(e) => e.stopPropagation()}>
+          <div 
+            className="support__modal-overlay" 
+            onClick={() => setSelectedSupport(null)}
+          >
+            <div 
+              className="support__modal" 
+              onClick={(e) => e.stopPropagation()}
+            >
               <div className="support__modal-header">
                 <h2 className="support__modal-title">Support Query Details</h2>
                 <button

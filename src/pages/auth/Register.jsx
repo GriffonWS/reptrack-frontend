@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { FaDumbbell, FaEye, FaEyeSlash } from 'react-icons/fa'
 import { registerAdmin } from '../../services/auth/authServices'
+import logo from '../../assets/logo (1).png'
 import './auth.css'
 
 const Register = () => {
@@ -44,9 +45,9 @@ const Register = () => {
             <div className="login-form-wrapper">
               <div className="logo">
                 <div className="logo-icon">
-                  <FaDumbbell />
+                  <img src={logo} alt="" />
                 </div>
-                <div className="logo-text">Reptrack</div>
+          
               </div>
 
               <form className="login-form" onSubmit={handleSubmit}>
