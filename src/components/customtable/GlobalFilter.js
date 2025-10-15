@@ -8,4 +8,4 @@ export const GlobalFilter = ({ filter, setFilter }) => {
         onChange={e => setFilter(e.target.value)}
       />
   )
-}
+} 

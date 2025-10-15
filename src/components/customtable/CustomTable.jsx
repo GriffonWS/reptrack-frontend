@@ -10,8 +10,8 @@ import { AiOutlineSearch } from "react-icons/ai";
 import "./style.css"; // custom styles or Tailwind
 
 function CustomTable(props) {
-  const memoColumns = useMemo(() => props.columns, []);
-  const memoRows = useMemo(() => props.data, []);
+  const memoColumns = useMemo(() => props.columns, [props.columns]);
+  const memoRows = useMemo(() => props.data, [props.data]);
 
   const {
     getTableProps, 
@@ -57,15 +57,18 @@ function CustomTable(props) {
       <div className="table-main">
         <div className="table-inner">
           {rows.length === 0 ? (
-            <p style={{textAlign: "center", padding: "20px 10px", borderBottom: "1px solid var(--primary-border)"}}>No data available</p>
+            <p style={{textAlign: "center", padding: "20px 10px", borderBottom: "1px solid var(--primary-border)"}}>
+              No data available
+            </p>
           ) : (
-            <table {...getTableProps()} responsive className="table-body">
+            <table {...getTableProps()} className="table-body">
               <thead>
                 {headerGroups.map((headerGroup) => (
-                  <tr {...headerGroup.getHeaderGroupProps()}>
+                  <tr {...headerGroup.getHeaderGroupProps()} key={headerGroup.id}>
                     {headerGroup.headers.map((column) => (
                       <th
                         {...column.getHeaderProps(column.getSortByToggleProps())}
+                        key={column.id}
                       >
                         {column.render("Header")}
                         <span>
@@ -84,10 +87,12 @@ function CustomTable(props) {
                 {page.map((row) => {
                   prepareRow(row);
                   return (
-                    <tr {...row.getRowProps()}>
+                    <tr {...row.getRowProps()} key={row.id}>
                       {row.cells.map((cell) => {
                         return (
-                          <td {...cell.getCellProps()}>{cell.render("Cell")}</td>
+                          <td {...cell.getCellProps()} key={cell.column.id}>
+                            {cell.render("Cell")}
+                          </td>
                         );
                       })}
                     </tr>
@@ -115,31 +120,15 @@ function CustomTable(props) {
               {">>"}
             </button>
           </div>
-          {/* <div className="tb-center">
-            <span>
-              Go to page:{" "}
-              <input
-                type="number"
-                defaultValue={pageIndex + 1}
-                onChange={(e) => {
-                  const pageNumber = e.target.value
-                    ? Number(e.target.value) - 1
-                    : 0;
-                  gotoPage(pageNumber);
-                }}
-                style={{ width: "50px" }}
-              />
-            </span>
-          </div> */}
           <div className="tb-right">
             <label>Total Entries: {rows.length}</label>
             <select
               value={pageSize}
               onChange={(e) => setPageSize(Number(e.target.value))}
             >
-              {[10, 25, 50].map((pageSize) => (
-                <option key={pageSize} value={pageSize}>
-                  Show {pageSize}
+              {[10, 25, 50].map((size) => (
+                <option key={size} value={size}>
+                  Show {size}
                 </option>
               ))}
             </select>
