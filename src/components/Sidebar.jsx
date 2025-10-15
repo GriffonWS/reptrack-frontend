@@ -62,7 +62,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             {openDropdowns.userManagement && (
               <ul className="submenu">
                 <li className="submenu-item">
-                  <a href="/dashboard/all_admins" className="submenu-link">All Members</a>
+                  <a href="/dashboard/all_users" className="submenu-link">All Members</a>
                 </li>
               </ul>
             )}

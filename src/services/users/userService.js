@@ -1,6 +1,4 @@
 // services/userService.js
-// Frontend User Service using Axios
-
 import axiosInstance from "../auth/authServices";
 
 /**
@@ -28,14 +26,41 @@ export const getAllUsers = async (params = {}) => {
       queryParams.append("limit", limit.toString());
     }
 
-    // Make API request (no /admin prefix - that's only for auth routes)
+    // Make API request
     const response = await axiosInstance.get(
       `/users/get-all?${queryParams.toString()}`
     );
 
     return response.data;
   } catch (error) {
-    console.error("❌ Error fetching users:", error.response?.data || error.message);
+    console.error(
+      "❌ Error fetching users:",
+      error.response?.data || error.message
+    );
+    throw error.response?.data || error;
+  }
+};
+
+/**
+ * Get a single user by ID
+ * @param {number|string} userId - User ID
+ * @returns {Promise<Object>} Response with user data
+ */
+export const getUserById = async (userId) => {
+  try {
+    if (!userId) {
+      throw new Error("User ID is required");
+    }
+
+    // Make API request
+    const response = await axiosInstance.get(`/users/get/${userId}`);
+
+    return response.data;
+  } catch (error) {
+    console.error(
+      `❌ Error fetching user ${userId}:`,
+      error.response?.data || error.message
+    );
     throw error.response?.data || error;
   }
 };
