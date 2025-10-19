@@ -12,8 +12,12 @@ import {
   FaHeartbeat,
   FaIdCard,
   FaEdit,
+  FaTrash
 } from "react-icons/fa";
-import { getUserById } from "../../../services/users/userService.js";
+import {
+  getUserById,
+  deleteUserById
+} from "../../../services/users/userService.js";
 import "../allUsers/UserProfile.css";
 
 const UserProfile = () => {
@@ -42,6 +46,22 @@ const UserProfile = () => {
 
     if (id) fetchUserData();
   }, [id]);
+
+  const handleDelete = async () => {
+    const confirmed = window.confirm(
+      `Are you sure you want to delete ${userData.firstName} ${userData.lastName}?`
+    );
+    if (!confirmed) return;
+
+    try {
+      await deleteUserById(id);
+      alert("✅ User deleted successfully!");
+      navigate("/dashboard/all_users");
+    } catch (err) {
+      console.error("❌ Error deleting user:", err);
+      alert("Failed to delete user.");
+    }
+  };
 
   if (loading) {
     return <div className="userprofile__loading">Loading profile...</div>;
@@ -95,9 +115,19 @@ const UserProfile = () => {
             </span>
           </div>
         </div>
-        <div>
-          <button className="userprofile__edit-btn">
+
+        <div className="userprofile__action-btns">
+          <button
+            className="userprofile__edit-btn"
+            onClick={() => navigate(`/dashboard/users/${id}/edit`)}
+          >
             <FaEdit /> Edit
+          </button>
+          <button
+            className="userprofile__delete-btn"
+            onClick={handleDelete}
+          >
+            <FaTrash /> Delete
           </button>
         </div>
       </div>

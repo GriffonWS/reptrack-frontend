@@ -27,6 +27,7 @@ axiosInstance.interceptors.request.use(
     const token = getAccessToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
+      console.log("🔑 Token attached to request");
     }
     return config;
   },
@@ -36,29 +37,19 @@ axiosInstance.interceptors.request.use(
 );
 
 /**
- * Add response interceptor to handle token refresh
+ * Add response interceptor to handle authentication errors
  */
 axiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const originalRequest = error.config;
+    // Handle 401 - Token expired or invalid
+    if (error.response?.status === 401) {
+      console.error("❌ Authentication failed - clearing tokens");
+      clearTokens();
 
-    // Handle 401 - Token expired
-    if (error.response?.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true;
-
-      try {
-        const refreshed = await refreshAccessToken();
-        if (refreshed) {
-          // Retry original request with new token
-          const token = getAccessToken();
-          originalRequest.headers.Authorization = `Bearer ${token}`;
-          return axiosInstance(originalRequest);
-        }
-      } catch (refreshError) {
-        clearTokens();
+      // Redirect to login if not already there
+      if (window.location.pathname !== "/login") {
         window.location.href = "/login";
-        return Promise.reject(refreshError);
       }
     }
 
@@ -71,11 +62,15 @@ axiosInstance.interceptors.response.use(
 // ============================================
 
 /**
- * Save tokens to localStorage
+ * Save token to localStorage
  */
-export const saveTokens = (token, refreshToken) => {
-  localStorage.setItem("access_token", token);
-  localStorage.setItem("refresh_token", refreshToken);
+export const saveTokens = (token) => {
+  if (token) {
+    localStorage.setItem("access_token", token);
+    console.log("✅ Access token saved to localStorage");
+  } else {
+    console.error("❌ No token provided to save");
+  }
 };
 
 /**
@@ -86,19 +81,12 @@ export const getAccessToken = () => {
 };
 
 /**
- * Get refresh token from localStorage
- */
-export const getRefreshToken = () => {
-  return localStorage.getItem("refresh_token");
-};
-
-/**
  * Clear all tokens from localStorage
  */
 export const clearTokens = () => {
   localStorage.removeItem("access_token");
-  localStorage.removeItem("refresh_token");
   localStorage.removeItem("admin_user");
+  console.log("🗑️ Tokens cleared from localStorage");
 };
 
 /**
@@ -113,7 +101,10 @@ export const isAuthenticated = () => {
  * Save admin user data to localStorage
  */
 export const saveAdminUser = (admin) => {
-  localStorage.setItem("admin_user", JSON.stringify(admin));
+  if (admin) {
+    localStorage.setItem("admin_user", JSON.stringify(admin));
+    console.log("✅ Admin user saved to localStorage");
+  }
 };
 
 /**
@@ -135,9 +126,12 @@ export const registerAdmin = async (adminData) => {
   try {
     const response = await axiosInstance.post("/register-admin", adminData);
 
-    if (response.data) {
-      saveTokens(response.data.token, response.data.refreshToken);
-      saveAdminUser(response.data.admin);
+    if (response.data && response.data.token) {
+      saveTokens(response.data.token);
+      if (response.data.admin) {
+        saveAdminUser(response.data.admin);
+      }
+      console.log("✅ Registration successful");
     }
 
     return response.data;
@@ -155,14 +149,37 @@ export const registerAdmin = async (adminData) => {
  */
 export const loginAdmin = async (email, password) => {
   try {
+    console.log("🔐 Attempting login for:", email);
+
     const response = await axiosInstance.post("/login-admin", {
       email,
       password,
     });
 
-    if (response.data) {
-      saveTokens(response.data.token, response.data.refreshToken);
-      saveAdminUser(response.data.admin);
+    console.log("📥 Login response received:", response.data);
+
+    if (response.data && response.data.token) {
+      // Save token to localStorage
+      saveTokens(response.data.token);
+
+      // Save admin user data
+      if (response.data.admin) {
+        saveAdminUser(response.data.admin);
+      }
+
+      console.log("✅ Login successful - Token and user data saved");
+
+      // Verify storage
+      console.log(
+        "🔍 Verification - Token in storage:",
+        getAccessToken() ? "YES" : "NO"
+      );
+      console.log(
+        "🔍 Verification - User in storage:",
+        getAdminUser() ? "YES" : "NO"
+      );
+    } else {
+      console.error("❌ No token in response");
     }
 
     return response.data;
@@ -179,7 +196,7 @@ export const getAdminProfile = async () => {
   try {
     const response = await axiosInstance.get("/profile");
 
-    if (response.data) {
+    if (response.data && response.data.admin) {
       saveAdminUser(response.data.admin);
     }
 
@@ -200,7 +217,7 @@ export const updateAdminProfile = async (updateData) => {
   try {
     const response = await axiosInstance.put("/profile", updateData);
 
-    if (response.data) {
+    if (response.data && response.data.admin) {
       saveAdminUser(response.data.admin);
     }
 
@@ -215,44 +232,13 @@ export const updateAdminProfile = async (updateData) => {
 };
 
 /**
- * Refresh access token
- */
-export const refreshAccessToken = async () => {
-  try {
-    const refreshToken = getRefreshToken();
-
-    if (!refreshToken) {
-      return false;
-    }
-
-    // Create instance without interceptors for refresh endpoint
-    const response = await axios.post(`${API_BASE_URL}/refresh-token`, {
-      refreshToken,
-    });
-
-    if (response.data && response.data.token) {
-      localStorage.setItem("access_token", response.data.token);
-      return true;
-    }
-
-    return false;
-  } catch (error) {
-    console.error(
-      "❌ Token Refresh Error:",
-      error.response?.data || error.message
-    );
-    clearTokens();
-    return false;
-  }
-};
-
-/**
  * Logout admin
  */
 export const logoutAdmin = async () => {
   try {
     await axiosInstance.post("/logout");
     clearTokens();
+    console.log("✅ Logout successful");
     return true;
   } catch (error) {
     // Clear tokens even if request fails
@@ -298,7 +284,20 @@ export const getTokenExpiration = (token) => {
 };
 
 /**
- * Check if token is about to expire (within 1 minute)
+ * Check if token is expired
+ */
+export const isTokenExpired = () => {
+  const token = getAccessToken();
+  if (!token) return true;
+
+  const expiration = getTokenExpiration(token);
+  if (!expiration) return true;
+
+  return Date.now() >= expiration;
+};
+
+/**
+ * Check if token is about to expire (within 5 minutes)
  */
 export const isTokenExpiringSoon = () => {
   const token = getAccessToken();
@@ -309,27 +308,25 @@ export const isTokenExpiringSoon = () => {
 
   const now = Date.now();
   const timeUntilExpiry = expiration - now;
-  const oneMinute = 60 * 1000;
+  const fiveMinutes = 5 * 60 * 1000;
 
-  return timeUntilExpiry < oneMinute;
+  return timeUntilExpiry < fiveMinutes && timeUntilExpiry > 0;
 };
 
 /**
- * Auto-refresh token if expiring soon
+ * Get time until token expires (in minutes)
  */
-export const setupTokenRefreshTimer = () => {
-  // Check token every 5 minutes
-  const interval = setInterval(async () => {
-    if (isAuthenticated() && isTokenExpiringSoon()) {
-      console.log("🔄 Token expiring soon, refreshing...");
-      const refreshed = await refreshAccessToken();
-      if (!refreshed) {
-        clearInterval(interval);
-      }
-    }
-  }, 5 * 60 * 1000); // 5 minutes
+export const getTokenTimeRemaining = () => {
+  const token = getAccessToken();
+  if (!token) return 0;
 
-  return interval;
+  const expiration = getTokenExpiration(token);
+  if (!expiration) return 0;
+
+  const now = Date.now();
+  const timeUntilExpiry = expiration - now;
+
+  return Math.floor(timeUntilExpiry / (60 * 1000)); // Convert to minutes
 };
 
 // ============================================
@@ -376,6 +373,24 @@ export const getPasswordStrengthFeedback = (password) => {
   }
 
   return feedback;
+};
+
+/**
+ * Get password strength level
+ */
+export const getPasswordStrength = (password) => {
+  let strength = 0;
+
+  if (password.length >= 8) strength++;
+  if (password.length >= 12) strength++;
+  if (/[A-Z]/.test(password)) strength++;
+  if (/[a-z]/.test(password)) strength++;
+  if (/\d/.test(password)) strength++;
+  if (/[@$!%*?&]/.test(password)) strength++;
+
+  if (strength <= 2) return { level: "weak", color: "red" };
+  if (strength <= 4) return { level: "medium", color: "orange" };
+  return { level: "strong", color: "green" };
 };
 
 // ============================================

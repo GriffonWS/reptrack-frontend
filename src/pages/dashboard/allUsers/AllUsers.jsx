@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { AiOutlineEye, AiOutlineSearch } from 'react-icons/ai';
+import { AiOutlinePlus } from 'react-icons/ai';
 import { MdChevronLeft, MdChevronRight, MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from 'react-icons/md';
 import { getAllUsers } from '../../../services/users/userService';
 import { useNavigate } from 'react-router-dom';
@@ -106,10 +107,19 @@ const AllUsers = () => {
     <div className="all-users-container">
       <div className="all-users-wrapper">
         {/* Header */}
-        <div className="users-header">
-          <h1 className="users-title">All Members</h1>
-          <p className="users-count">Total: {totalUsers} members</p>
-        </div>
+       <div className="users-header">
+  <div>
+    <h1 className="users-title">All Members</h1>
+    <p className="users-count">Total: {totalUsers} members</p>
+  </div>
+  <button
+    className="add-member-btn"
+    onClick={() => navigate('/dashboard/add-user')}
+  >
+    <AiOutlinePlus className="add-member-icon" />
+    Add Member
+  </button>
+</div>
 
         {/* Search Bar */}
         <div className="search-container">

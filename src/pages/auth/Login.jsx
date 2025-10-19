@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import { FaDumbbell, FaEye, FaEyeSlash } from 'react-icons/fa'
+import { FaEye, FaEyeSlash } from 'react-icons/fa'
 import logo from '../../assets/logo (1).png'
 import './auth.css'
+import { loginAdmin } from '../../services/auth/authServices.js'  // ✅ Import your login service
 
 const Login = () => {
   const [email, setEmail] = useState('')
@@ -9,31 +10,36 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setIsLoading(true)
-    setTimeout(() => {
-      setIsLoading(false)
-      alert(`Logged in with ${email}`)
+    try {
+      // ✅ Call backend login API
+      const response = await loginAdmin(email, password)
+      console.log('✅ Login successful:', response)
+
+      // Redirect after token is saved
       window.location.href = '/dashboard'
+    } catch (error) {
+      console.error('❌ Login failed:', error)
+      alert(error?.message || 'Invalid credentials. Please try again.')
+    } finally {
+      setIsLoading(false)
       setEmail('')
       setPassword('')
-    }, 1000)
+    }
   }
-
 
   return (
     <>
-      
       <div className="login-container">
         <div className="login-wrapper">
           <div className="login-left">
             <div className="login-form-wrapper">
               <div className="logo">
                 <div className="logo-icon">
-                 <img src={logo} alt="" />
+                  <img src={logo} alt="" />
                 </div>
-              
               </div>
 
               <div className="login-form">
@@ -69,9 +75,12 @@ const Login = () => {
                 </div>
 
                 <div className="forgot-password">
-                  <a onClick={() => alert('Forgot password clicked')}>Forgot Password?</a>
+                  <a onClick={() => alert('Forgot password clicked')}>
+                    Forgot Password?
+                  </a>
                 </div>
 
+                {/* ✅ Real login here */}
                 <button
                   type="button"
                   className="submit-btn"
@@ -89,7 +98,10 @@ const Login = () => {
           </div>
 
           <div className="login-right">
-            <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=80" alt="Gym" />
+            <img
+              src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=80"
+              alt="Gym"
+            />
           </div>
         </div>
       </div>

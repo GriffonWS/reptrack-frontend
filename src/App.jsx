@@ -14,8 +14,8 @@ import AddAerobic from './pages/dashboard/addAerobic/AddAerobic';
 import AddAdmin from './pages/dashboard/addAdmin/AddAdmin';
 import AllUsers from './pages/dashboard/allUsers/AllUsers';
 import UserProfile from './pages/dashboard/allUsers/UserProfile';
-
-
+import EditUserProfile from './pages/dashboard/allUsers/EditUserProfile';
+import AddUser from './pages/dashboard/allUsers/AddUser';
 
 const App = () => {
   return (
@@ -35,7 +35,9 @@ const App = () => {
         <Route path="profile" element={<Profile />} />
         <Route path="add_aerobic" element={<AddAerobic />} />
         <Route path="add_admin" element={<AddAdmin />} />
+        <Route path="add-user" element={<AddUser />} />
         <Route path="user/:id" element={<UserProfile />} />
+        <Route path="users/:id/edit" element={<EditUserProfile />} />
       </Route>
     </Routes>
   );

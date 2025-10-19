@@ -157,6 +157,48 @@
   font-weight: 500;
 }
 
+.userprofile__action-btns {
+  display: flex;
+  gap: 10px;
+}
+
+.userprofile__edit-btn {
+  background: #ff7f00;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.3s;
+}
+
+.userprofile__edit-btn:hover {
+  background: #e55b00;
+}
+
+.userprofile__delete-btn {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.3s;
+}
+
+.userprofile__delete-btn:hover {
+  background: #c0392b;
+}
+
+
 @media (max-width: 768px) {
   .userprofile__info-grid {
     grid-template-columns: 1fr 1fr;

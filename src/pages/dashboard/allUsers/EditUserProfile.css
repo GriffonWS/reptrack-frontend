@@ -1,0 +1,140 @@
+.editprofile__wrapper {
+  background-color: #f8f9fa;
+  min-height: 100vh;
+  padding: 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.editprofile__topbar {
+  margin-bottom: 20px;
+}
+
+.editprofile__backbtn {
+  background: none;
+  border: none;
+  color: #e55b00;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 15px;
+}
+
+.editprofile__form {
+  background: white;
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.editprofile__image-section {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.editprofile__avatar {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff4b2b, #ff7f00);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  overflow: hidden;
+}
+
+.editprofile__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.editprofile__upload-label {
+  background: #ff7f00;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.editprofile__upload-label:hover {
+  background: #e55b00;
+}
+
+.editprofile__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+
+.editprofile__field {
+  display: flex;
+  flex-direction: column;
+}
+
+.editprofile__field label {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #888;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.editprofile__field input,
+.editprofile__field select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  outline: none;
+}
+
+.editprofile__field input:focus,
+.editprofile__field select:focus {
+  border-color: #ff7f00;
+}
+
+.editprofile__btn-row {
+  margin-top: 30px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.editprofile__btn-row button {
+  background: #ff7f00;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.editprofile__btn-row button:hover {
+  background: #e55b00;
+}
+
+@media (max-width: 992px) {
+  .editprofile__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .editprofile__grid {
+    grid-template-columns: 1fr;
+  }
+  .editprofile__image-section {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
