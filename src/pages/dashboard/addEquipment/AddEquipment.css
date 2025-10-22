@@ -9,42 +9,36 @@
           --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .adduser__container {
+        .addequip__container {
           min-height: calc(100vh - 70px);
           background-color: var(--bg-light);
+          padding: 2rem;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
         }
 
-        .adduser__wrapper {
-          max-width: 1200px;
+        .addequip__wrapper {
+          max-width: 900px;
           margin: 0 auto;
         }
 
         /* ==================== HEADER ==================== */
-        .adduser__header {
+        .addequip__header {
           margin-bottom: 2rem;
           animation: fadeIn 0.5s ease;
         }
 
-        .adduser__title {
+        .addequip__title {
           font-size: 2rem;
           font-weight: 700;
           color: var(--text-dark);
-          margin: 0 0 0.5rem 0;
+          margin: 0;
           letter-spacing: -0.5px;
         }
 
-        .adduser__subtitle {
-          font-size: 0.9375rem;
-          color: var(--text-muted);
-          margin: 0;
-          font-weight: 500;
-        }
-
         /* ==================== FORM CONTAINER ==================== */
-        .adduser__form-container {
+        .addequip__form-container {
           background-color: var(--card-bg);
           border-radius: 12px;
           border: 1px solid var(--border);
@@ -69,39 +63,37 @@
           }
         }
 
-        .adduser__form {
-          display: flex;
-          flex-direction: column;
-          gap: 1.5rem;
-        }
-
         /* ==================== FORM GRID ==================== */
-        .adduser__form-grid {
+        .addequip__form-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+          grid-template-columns: repeat(2, 1fr);
           gap: 1.5rem;
+          margin-bottom: 2rem;
         }
 
-        .adduser__form-group {
+        .addequip__form-group {
           display: flex;
           flex-direction: column;
           gap: 0.5rem;
         }
 
-        .adduser__form-group--full {
-          grid-column: 1 / -1;
-        }
-
         /* ==================== LABELS ==================== */
-        .adduser__label {
+        .addequip__label {
           font-size: 0.875rem;
           font-weight: 600;
           color: var(--text-dark);
         }
 
-        /* ==================== INPUTS & SELECTS ==================== */
-        .adduser__input,
-        .adduser__textarea {
+        .addequip__upload-label {
+          font-size: 0.875rem;
+          font-weight: 600;
+          color: var(--text-dark);
+          display: block;
+          margin-bottom: 0.75rem;
+        }
+
+        /* ==================== INPUT ==================== */
+        .addequip__input {
           padding: 0.75rem 1rem;
           border: 1.5px solid var(--border);
           border-radius: 8px;
@@ -112,156 +104,143 @@
           background-color: var(--bg-light);
         }
 
-        .adduser__input:focus,
-        .adduser__textarea:focus {
+        .addequip__input:focus {
           border-color: var(--primary);
           background-color: white;
           box-shadow: 0 0 0 3px rgba(242, 103, 34, 0.1);
         }
 
-        .adduser__input::placeholder,
-        .adduser__textarea::placeholder {
+        .addequip__input::placeholder {
           color: var(--text-muted);
         }
 
-        /* ==================== TEXTAREA ==================== */
-        .adduser__textarea {
-          resize: vertical;
-          min-height: 120px;
-          line-height: 1.5;
+        /* ==================== UPLOAD SECTION ==================== */
+        .addequip__upload-section {
+          margin-bottom: 2rem;
+          padding-bottom: 2rem;
+          border-bottom: 1px solid var(--border);
         }
 
-        /* ==================== FILE INPUT ==================== */
-        .adduser__file-input {
-          position: relative;
-          cursor: pointer;
-        }
-
-        .adduser__file-input-hidden {
+        .addequip__file-input {
           display: none;
         }
 
-        .adduser__file-label {
+        .addequip__file-input-wrapper {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+        }
+
+        .addequip__file-btn {
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 0.75rem;
-          padding: 1rem;
-          border: 2px dashed var(--border);
+          gap: 0.5rem;
+          padding: 0.75rem 1.5rem;
+          background-color: var(--bg-light);
+          border: 1.5px solid var(--border);
           border-radius: 8px;
+          cursor: pointer;
           transition: var(--transition);
+          font-size: 0.9375rem;
+          font-weight: 600;
           color: var(--text-muted);
-          font-weight: 500;
+          white-space: nowrap;
+          flex-shrink: 0;
         }
 
-        .adduser__file-input:hover .adduser__file-label {
+        .addequip__file-btn:hover {
           border-color: var(--primary);
-          background-color: rgba(242, 103, 34, 0.02);
           color: var(--primary);
+          background-color: rgba(242, 103, 34, 0.02);
         }
 
-        .adduser__image-preview {
-          margin-top: 1rem;
-          width: 100%;
-          max-width: 200px;
-          border-radius: 8px;
+        .addequip__file-name {
+          font-size: 0.875rem;
+          color: var(--text-muted);
+          flex: 1;
           overflow: hidden;
-          border: 1px solid var(--border);
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
 
-        .adduser__image-preview img {
-          width: 100%;
-          height: auto;
-          display: block;
-        }
-
-        /* ==================== ACTIONS ==================== */
-        .adduser__actions {
+        /* ==================== SUBMIT SECTION ==================== */
+        .addequip__submit-section {
           display: flex;
-          gap: 1rem;
-          justify-content: flex-end;
-          margin-top: 2rem;
-          padding-top: 1.5rem;
-          border-top: 1px solid var(--border);
+          justify-content: center;
         }
 
-        .adduser__btn {
-          padding: 0.75rem 2rem;
+        .addequip__submit-btn {
+          padding: 0.875rem 3rem;
+          background: linear-gradient(135deg, var(--primary), #e55a24);
+          color: white;
           border: none;
           border-radius: 8px;
           font-size: 0.9375rem;
           font-weight: 600;
           cursor: pointer;
           transition: var(--transition);
-          font-family: inherit;
-        }
-
-        .adduser__btn--primary {
-          background: linear-gradient(135deg, var(--primary), #e55a24);
-          color: white;
           box-shadow: 0 2px 8px rgba(242, 103, 34, 0.2);
+          font-family: inherit;
+          min-width: 150px;
         }
 
-        .adduser__btn--primary:hover {
+        .addequip__submit-btn:hover {
           transform: translateY(-2px);
           box-shadow: 0 4px 16px rgba(242, 103, 34, 0.3);
         }
 
-        .adduser__btn--secondary {
-          background-color: transparent;
-          color: var(--text-dark);
-          border: 1.5px solid var(--border);
-        }
-
-        .adduser__btn--secondary:hover {
-          border-color: var(--primary);
-          background-color: var(--bg-light);
-          color: var(--primary);
-        }
-
         /* ==================== RESPONSIVE ==================== */
         @media (max-width: 768px) {
-          
-
-          .adduser__title {
-            font-size: 1.5rem;
-          }
-
-          .adduser__form-container {
+          .addequip__container {
             padding: 1.5rem;
           }
 
-          .adduser__form-grid {
+          .addequip__title {
+            font-size: 1.5rem;
+          }
+
+          .addequip__form-container {
+            padding: 1.5rem;
+          }
+
+          .addequip__form-grid {
             grid-template-columns: 1fr;
             gap: 1.25rem;
           }
 
-          .adduser__actions {
+          .addequip__file-input-wrapper {
             flex-direction: column;
-            justify-content: stretch;
+            align-items: stretch;
+            gap: 0.75rem;
           }
 
-          .adduser__btn {
+          .addequip__file-btn {
             width: 100%;
+            justify-content: center;
+          }
+
+          .addequip__file-name {
+            width: 100%;
+            text-align: center;
           }
         }
 
         @media (max-width: 480px) {
-          
+          .addequip__container {
+            padding: 1rem;
+          }
 
-          .adduser__title {
+          .addequip__title {
             font-size: 1.25rem;
           }
 
-          .adduser__form-container {
+          .addequip__form-container {
             padding: 1.25rem;
           }
 
-          .adduser__form-grid {
-            gap: 1rem;
-          }
-
-          .adduser__btn {
-            padding: 0.75rem 1.5rem;
+          .addequip__submit-btn {
+            width: 100%;
+            min-width: auto;
           }
         }

@@ -1,230 +1,188 @@
-import React, { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useState } from 'react';
 import {
-  FaArrowLeft,
-  FaUser,
-  FaPhone,
-  FaEnvelope,
-  FaCalendarAlt,
-  FaBirthdayCake,
-  FaVenusMars,
-  FaWeight,
-  FaHeartbeat,
-  FaIdCard,
-  FaEdit,
-  FaTrash
-} from "react-icons/fa";
-import {
-  getUserById,
-  deleteUserById
-} from "../../../services/users/userService.js";
-import "../allUsers/UserProfile.css";
+  FiArrowLeft,
+  FiUser,
+  FiPhone,
+  FiMail,
+  FiCalendar,
+  FiEdit,
+  FiTrash
+} from 'react-icons/fi';
+import './UserProfile.css';
+import { Link } from 'react-router-dom';
 
 const UserProfile = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-
-  const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        console.log("📥 Fetching for ID:", id);
-        setLoading(true);
-        const response = await getUserById(id);
-        console.log("🧾 Full API response:", response);
-        setUserData(response?.data || null);
-      } catch (err) {
-        console.error("❌ Failed to load user data:", err);
-        setError(err.message || "Failed to load user data");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (id) fetchUserData();
-  }, [id]);
-
-  const handleDelete = async () => {
-    const confirmed = window.confirm(
-      `Are you sure you want to delete ${userData.firstName} ${userData.lastName}?`
-    );
-    if (!confirmed) return;
-
-    try {
-      await deleteUserById(id);
-      alert("✅ User deleted successfully!");
-      navigate("/dashboard/all_users");
-    } catch (err) {
-      console.error("❌ Error deleting user:", err);
-      alert("Failed to delete user.");
-    }
-  };
-
-  if (loading) {
-    return <div className="userprofile__loading">Loading profile...</div>;
-  }
-
-  if (error || !userData) {
-    return (
-      <div className="userprofile__error">
-        <p>{error || "User not found"}</p>
-        <button onClick={() => navigate(-1)} className="userprofile__backbtn">
-          <FaArrowLeft /> Back
-        </button>
-      </div>
-    );
-  }
+  const [selectedUser] = useState({
+    id: 1,
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'john@example.com',
+    phone: '+91 9876543210',
+    countryCode: '+91',
+    subscriptionType: 'Premium',
+    dateOfJoining: '2024-01-15',
+    dateOfBirth: '1995-05-20',
+    gender: 'Male',
+    weight: '75',
+    healthInfo: 'No known allergies',
+    uniqueId: 'MEM001',
+    status: true,
+    profileImage: null
+  });
 
   return (
-    <div className="userprofile__wrapper">
-      {/* Top Bar */}
-      <div className="userprofile__topbar">
-        <button className="userprofile__backbtn" onClick={() => navigate(-1)}>
-          <FaArrowLeft /> Back
-        </button>
-      </div>
+    <div className="profile__wrapper">
+      {/* Back Button */}
+      <button className="profile__back-btn">
+        <FiArrowLeft size={20} />
+        Back
+      </button>
 
-      {/* Header Section */}
-      <div className="userprofile__header-card">
-        <div className="userprofile__header-left">
-          <div className="userprofile__avatar">
-            {userData.profileImage ? (
-              <img
-                src={userData.profileImage}
-                alt="Profile"
-                className="userprofile__avatar-img"
-              />
+      {/* Header Card */}
+      <div className="profile__header">
+        <div className="profile__header-left">
+          <div className="profile__avatar">
+            {selectedUser.profileImage ? (
+              <img src={selectedUser.profileImage} alt="Profile" />
             ) : (
-              <FaUser size={40} />
+              <FiUser size={48} />
             )}
           </div>
-          <div>
-            <h2 className="userprofile__name">
-              {userData.firstName} {userData.lastName}
-            </h2>
-            <p className="userprofile__id">Member ID: {userData.uniqueId}</p>
-            <span
-              className={`userprofile__status ${
-                userData.status ? "active" : "inactive"
-              }`}
-            >
-              {userData.status ? "Active" : "Inactive"}
+          <div className="profile__header-info">
+            <h1 className="profile__name">
+              {selectedUser.firstName} {selectedUser.lastName}
+            </h1>
+            <p className="profile__member-id">Member ID: {selectedUser.uniqueId}</p>
+            <span className={`profile__status profile__status--${selectedUser.status ? 'active' : 'inactive'}`}>
+              {selectedUser.status ? 'Active' : 'Inactive'}
             </span>
           </div>
         </div>
-
-        <div className="userprofile__action-btns">
-          <button
-            className="userprofile__edit-btn"
-            onClick={() => navigate(`/dashboard/users/${id}/edit`)}
-          >
-            <FaEdit /> Edit
-          </button>
-          <button
-            className="userprofile__delete-btn"
-            onClick={handleDelete}
-          >
-            <FaTrash /> Delete
+        <div className="profile__header-actions">
+          <Link to="/dashboard/user/:id/edit" className="profile__btn profile__btn--edit" style={{textDecoration:"none"}}>
+            <FiEdit size={18} />
+            Edit
+          </Link>
+          <button className="profile__btn profile__btn--delete">
+            <FiTrash size={18} />
+            Delete
           </button>
         </div>
       </div>
 
-      {/* Contact Info */}
-      <div className="userprofile__section-card">
-        <h3 className="userprofile__section-title">Contact Information</h3>
-        <div className="userprofile__info-grid">
-          <div className="userprofile__info-item">
-            <FaPhone className="userprofile__icon" />
-            <div>
-              <label>Mobile Number</label>
-              <p>{userData.phone || "—"}</p>
+      {/* Contact Information */}
+      <div className="profile__section">
+        <h3 className="profile__section-title">Contact Information</h3>
+        <div className="profile__info-grid">
+          <div className="profile__info-item">
+            <div className="profile__info-icon">
+              <FiPhone size={20} />
+            </div>
+            <div className="profile__info-content">
+              <label className="profile__info-label">Mobile Number</label>
+              <p className="profile__info-value">{selectedUser.phone || '—'}</p>
             </div>
           </div>
-          <div className="userprofile__info-item">
-            <FaEnvelope className="userprofile__icon" />
-            <div>
-              <label>Email</label>
-              <p>{userData.email || "—"}</p>
+          <div className="profile__info-item">
+            <div className="profile__info-icon">
+              <FiMail size={20} />
+            </div>
+            <div className="profile__info-content">
+              <label className="profile__info-label">Email Address</label>
+              <p className="profile__info-value">{selectedUser.email || '—'}</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Membership Details */}
-      <div className="userprofile__section-card">
-        <h3 className="userprofile__section-title">Membership Details</h3>
-        <div className="userprofile__info-grid">
-          <div className="userprofile__info-item">
-            <FaIdCard className="userprofile__icon" />
-            <div>
-              <label>Subscription Type</label>
-              <p>{userData.subscriptionType || "—"}</p>
+      <div className="profile__section">
+        <h3 className="profile__section-title">Membership Details</h3>
+        <div className="profile__info-grid">
+          <div className="profile__info-item">
+            <div className="profile__info-icon">
+              <FiCalendar size={20} />
+            </div>
+            <div className="profile__info-content">
+              <label className="profile__info-label">Subscription Type</label>
+              <p className="profile__info-value">{selectedUser.subscriptionType || '—'}</p>
             </div>
           </div>
-          <div className="userprofile__info-item">
-            <FaCalendarAlt className="userprofile__icon" />
-            <div>
-              <label>Date of Joining</label>
-              <p>{userData.dateOfJoining || "—"}</p>
+          <div className="profile__info-item">
+            <div className="profile__info-icon">
+              <FiCalendar size={20} />
+            </div>
+            <div className="profile__info-content">
+              <label className="profile__info-label">Date of Joining</label>
+              <p className="profile__info-value">{selectedUser.dateOfJoining || '—'}</p>
             </div>
           </div>
-          <div className="userprofile__info-item">
-            <FaBirthdayCake className="userprofile__icon" />
-            <div>
-              <label>Date of Birth</label>
-              <p>{userData.dateOfBirth || "—"}</p>
+          <div className="profile__info-item">
+            <div className="profile__info-icon">
+              <FiCalendar size={20} />
+            </div>
+            <div className="profile__info-content">
+              <label className="profile__info-label">Date of Birth</label>
+              <p className="profile__info-value">{selectedUser.dateOfBirth || '—'}</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Personal Information */}
-      <div className="userprofile__section-card">
-        <h3 className="userprofile__section-title">Personal Information</h3>
-        <div className="userprofile__info-grid">
-          <div className="userprofile__info-item">
-            <FaVenusMars className="userprofile__icon" />
-            <div>
-              <label>Gender</label>
-              <p>{userData.gender || "—"}</p>
+      <div className="profile__section">
+        <h3 className="profile__section-title">Personal Information</h3>
+        <div className="profile__info-grid">
+          <div className="profile__info-item">
+            <div className="profile__info-icon">
+              <FiUser size={20} />
+            </div>
+            <div className="profile__info-content">
+              <label className="profile__info-label">Gender</label>
+              <p className="profile__info-value">{selectedUser.gender || '—'}</p>
             </div>
           </div>
-          <div className="userprofile__info-item">
-            <FaWeight className="userprofile__icon" />
-            <div>
-              <label>Weight</label>
-              <p>{userData.weight || "—"}</p>
+          <div className="profile__info-item">
+            <div className="profile__info-icon">
+              <FiUser size={20} />
+            </div>
+            <div className="profile__info-content">
+              <label className="profile__info-label">Weight (lbs)</label>
+              <p className="profile__info-value">{selectedUser.weight || '—'}</p>
             </div>
           </div>
-          <div className="userprofile__info-item">
-            <FaHeartbeat className="userprofile__icon" />
-            <div>
-              <label>Health Info</label>
-              <p>{userData.healthInfo || "—"}</p>
+          <div className="profile__info-item">
+            <div className="profile__info-icon">
+              <FiUser size={20} />
+            </div>
+            <div className="profile__info-content">
+              <label className="profile__info-label">Health Information</label>
+              <p className="profile__info-value">{selectedUser.healthInfo || '—'}</p>
             </div>
           </div>
         </div>
       </div>
 
       {/* Login Credentials */}
-      <div className="userprofile__section-card">
-        <h3 className="userprofile__section-title">Login Credentials</h3>
-        <div className="userprofile__info-grid">
-          <div className="userprofile__info-item">
-            <FaIdCard className="userprofile__icon" />
-            <div>
-              <label>Unique ID</label>
-              <p>{userData.uniqueId || "—"}</p>
+      <div className="profile__section">
+        <h3 className="profile__section-title">Login Credentials</h3>
+        <div className="profile__info-grid">
+          <div className="profile__info-item">
+            <div className="profile__info-icon">
+              <FiUser size={20} />
+            </div>
+            <div className="profile__info-content">
+              <label className="profile__info-label">Unique ID</label>
+              <p className="profile__info-value">{selectedUser.uniqueId || '—'}</p>
             </div>
           </div>
-          <div className="userprofile__info-item">
-            <FaPhone className="userprofile__icon" />
-            <div>
-              <label>Phone</label>
-              <p>{userData.phone || "—"}</p>
+          <div className="profile__info-item">
+            <div className="profile__info-icon">
+              <FiPhone size={20} />
+            </div>
+            <div className="profile__info-content">
+              <label className="profile__info-label">Phone</label>
+              <p className="profile__info-value">{selectedUser.phone || '—'}</p>
             </div>
           </div>
         </div>
@@ -232,5 +190,4 @@ const UserProfile = () => {
     </div>
   );
 };
-
 export default UserProfile;

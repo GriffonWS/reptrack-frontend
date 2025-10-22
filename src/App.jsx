@@ -11,9 +11,10 @@ import AllEquipments from './pages/dashboard/allEquipments/AllEquipments';
 import Support from './pages/dashboard/support/Support';
 import Profile from './pages/dashboard/profile/Profile';
 import AddAerobic from './pages/dashboard/addAerobic/AddAerobic';
-import AddAdmin from './pages/dashboard/addAdmin/AddAdmin';
+import AddEquipment from './pages/dashboard/addEquipment/AddEquipment';
 import AllUsers from './pages/dashboard/allUsers/AllUsers';
 import UserProfile from './pages/dashboard/allUsers/UserProfile';
+import EditProfile from './pages/dashboard/profile/EditProfile';
 import EditUserProfile from './pages/dashboard/allUsers/EditUserProfile';
 import AddUser from './pages/dashboard/allUsers/AddUser';
 
@@ -33,11 +34,12 @@ const App = () => {
         <Route path="all_equipments" element={<AllEquipments />} />
         <Route path="support" element={<Support />} />
         <Route path="profile" element={<Profile />} />
+        <Route path="profile/edit" element={<EditProfile />} />
         <Route path="add_aerobic" element={<AddAerobic />} />
-        <Route path="add_admin" element={<AddAdmin />} />
+        <Route path="add_equipment" element={<AddEquipment />} />
         <Route path="add-user" element={<AddUser />} />
         <Route path="user/:id" element={<UserProfile />} />
-        <Route path="users/:id/edit" element={<EditUserProfile />} />
+        <Route path="user/:id/edit" element={<EditUserProfile />} />
       </Route>
     </Routes>
   );

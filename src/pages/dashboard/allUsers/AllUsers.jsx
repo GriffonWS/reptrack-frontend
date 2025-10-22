@@ -1,54 +1,32 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { AiOutlineEye, AiOutlineSearch } from 'react-icons/ai';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { MdChevronLeft, MdChevronRight, MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from 'react-icons/md';
-import { getAllUsers } from '../../../services/users/userService';
-import { useNavigate } from 'react-router-dom';
-import '../allUsers/AllUsers.css';
-
+import './AllUsers.css';
+import { Link } from 'react-router-dom';
 const AllUsers = () => {
-  const navigate = useNavigate();
-  const [users, setUsers] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [totalUsers, setTotalUsers] = useState(0);
 
-  // Fetch users from API
-  useEffect(() => {
-    fetchUsers();
-  }, [currentPage, itemsPerPage]);
+  // Mock data
+  const mockUsers = [
+    { id: 1, firstName: 'John', lastName: 'Doe', phone: '9876543210', email: 'john@example.com', subscriptionType: 'Premium', uniqueId: 'MEM001', status: true },
+    { id: 2, firstName: 'Jane', lastName: 'Smith', phone: '9876543211', email: 'jane@example.com', subscriptionType: 'Standard', uniqueId: 'MEM002', status: true },
+    { id: 3, firstName: 'Mike', lastName: 'Johnson', phone: '9876543212', email: 'mike@example.com', subscriptionType: 'Premium', uniqueId: 'MEM003', status: false },
+    { id: 4, firstName: 'Sarah', lastName: 'Williams', phone: '9876543213', email: 'sarah@example.com', subscriptionType: 'Standard', uniqueId: 'MEM004', status: true },
+    { id: 5, firstName: 'David', lastName: 'Brown', phone: '9876543214', email: 'david@example.com', subscriptionType: 'Premium', uniqueId: 'MEM005', status: true },
+    { id: 6, firstName: 'Emma', lastName: 'Davis', phone: '9876543215', email: 'emma@example.com', subscriptionType: 'None', uniqueId: 'MEM006', status: false },
+    { id: 7, firstName: 'Robert', lastName: 'Miller', phone: '9876543216', email: 'robert@example.com', subscriptionType: 'Standard', uniqueId: 'MEM007', status: true },
+    { id: 8, firstName: 'Lisa', lastName: 'Wilson', phone: '9876543217', email: 'lisa@example.com', subscriptionType: 'Premium', uniqueId: 'MEM008', status: true },
+    { id: 9, firstName: 'James', lastName: 'Moore', phone: '9876543218', email: 'james@example.com', subscriptionType: 'Standard', uniqueId: 'MEM009', status: true },
+    { id: 10, firstName: 'Mary', lastName: 'Taylor', phone: '9876543219', email: 'mary@example.com', subscriptionType: 'Premium', uniqueId: 'MEM010', status: false },
+    { id: 11, firstName: 'Thomas', lastName: 'Anderson', phone: '9876543220', email: 'thomas@example.com', subscriptionType: 'Standard', uniqueId: 'MEM011', status: true },
+    { id: 12, firstName: 'Jennifer', lastName: 'Thomas', phone: '9876543221', email: 'jennifer@example.com', subscriptionType: 'Premium', uniqueId: 'MEM012', status: true },
+  ];
 
-  const fetchUsers = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      
-      const params = {
-        limit: itemsPerPage,
-        offset: (currentPage - 1) * itemsPerPage,
-        sortBy: 'id',
-        order: 'DESC'
-      };
-
-      const response = await getAllUsers(params);
-      
-      setUsers(response.data || []);
-      setTotalUsers(response.total || 0);
-    } catch (err) {
-      console.error('Failed to fetch users:', err);
-      setError(err.message || 'Failed to fetch users. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Filter users based on search term
-  const filteredUsers = users.filter(user => {
+  const filteredUsers = mockUsers.filter(user => {
     if (!searchTerm) return true;
-    
     const searchLower = searchTerm.toLowerCase();
     return (
       user.firstName?.toLowerCase().includes(searchLower) ||
@@ -59,11 +37,9 @@ const AllUsers = () => {
     );
   });
 
+  const totalUsers = filteredUsers.length;
   const totalPages = Math.ceil(totalUsers / itemsPerPage);
-
-  const handleViewProfile = (userId) => {
-  navigate(`/dashboard/user/${userId}`);
-};
+  const paginatedUsers = filteredUsers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= totalPages) {
@@ -76,70 +52,40 @@ const AllUsers = () => {
     setCurrentPage(1);
   };
 
-  // Loading state
-  if (loading) {
-    return (
-      <div className="all-users-container">
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
-          <p className="loading-text">Loading users...</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Error state
-  if (error) {
-    return (
-      <div className="all-users-container">
-        <div className="error-container">
-          <h3 className="error-title">Error Loading Users</h3>
-          <p className="error-message">{error}</p>
-          <button onClick={fetchUsers} className="error-retry-btn">
-            Retry
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="all-users-container">
-      <div className="all-users-wrapper">
+    <div className="users__container">
+      <div className="users__wrapper">
         {/* Header */}
-       <div className="users-header">
-  <div>
-    <h1 className="users-title">All Members</h1>
-    <p className="users-count">Total: {totalUsers} members</p>
-  </div>
-  <button
-    className="add-member-btn"
-    onClick={() => navigate('/dashboard/add-user')}
-  >
-    <AiOutlinePlus className="add-member-icon" />
-    Add Member
-  </button>
-</div>
+        <div className="users__header">
+          <div className="users__header-content">
+            <h1 className="users__title">All Members</h1>
+            <p className="users__subtitle">Total: {totalUsers} members</p>
+          </div>
+          <Link to="/dashboard/add-user" className="users__add-btn" style={{textDecoration:"none"}}>
+            <AiOutlinePlus size={20} />
+            Add Member
+          </Link>
+        </div>
 
         {/* Search Bar */}
-        <div className="search-container">
-          <div className="search-wrapper">
-            <AiOutlineSearch className="search-icon" />
+        <div className="users__search-box">
+          <div className="users__search-wrapper">
+            <AiOutlineSearch className="users__search-icon" />
             <input
               type="text"
               placeholder="Search by name, email, phone, or member ID..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="search-input"
+              className="users__search-input"
             />
           </div>
         </div>
 
         {/* Table Container */}
-        <div className="table-container">
+        <div className="users__table-wrapper">
           {/* Desktop Table */}
-          <div className="desktop-table">
-            <table className="users-table">
+          <div className="users__desktop-table">
+            <table className="users__table">
               <thead>
                 <tr>
                   <th>S no</th>
@@ -153,50 +99,45 @@ const AllUsers = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredUsers.length === 0 ? (
+                {paginatedUsers.length === 0 ? (
                   <tr>
-                    <td colSpan="8" className="no-data">
+                    <td colSpan="8" className="users__no-data">
                       {searchTerm ? 'No members found matching your search' : 'No members found'}
                     </td>
                   </tr>
                 ) : (
-                  filteredUsers.map((user, index) => (
+                  paginatedUsers.map((user, index) => (
                     <tr key={user.id}>
                       <td>{((currentPage - 1) * itemsPerPage) + index + 1}</td>
                       <td>
-                        <div className="user-name-cell">
-                          <div className="user-avatar">
+                        <div className="users__name-cell">
+                          <div className="users__avatar">
                             <span>
-                              {(user.firstName?.charAt(0) || '').toUpperCase()}
-                              {(user.lastName?.charAt(0) || '').toUpperCase()}
+                              {user.firstName.charAt(0)}
+                              {user.lastName.charAt(0)}
                             </span>
                           </div>
-                          <div className="user-name">
-                            {user.firstName || ''} {user.lastName || ''}
-                          </div>
+                          <span className="users__name">{user.firstName} {user.lastName}</span>
                         </div>
                       </td>
-                      <td>{user.phone || 'N/A'}</td>
-                      <td>{user.email || 'N/A'}</td>
+                      <td>{user.phone}</td>
+                      <td>{user.email}</td>
                       <td>
-                        <span className={`badge ${user.subscriptionType ? 'badge-success' : 'badge-gray'}`}>
-                          {user.subscriptionType || 'None'}
+                        <span className={`users__badge users__badge--${user.subscriptionType !== 'None' ? 'success' : 'gray'}`}>
+                          {user.subscriptionType}
                         </span>
                       </td>
-                      <td className="member-id">{user.uniqueId || 'N/A'}</td>
+                      <td className="users__member-id">{user.uniqueId}</td>
                       <td>
-                        <span className={`badge ${user.status ? 'badge-active' : 'badge-inactive'}`}>
+                        <span className={`users__badge users__badge--${user.status ? 'active' : 'inactive'}`}>
                           {user.status ? 'Active' : 'Inactive'}
                         </span>
                       </td>
                       <td>
-                        <button
-                          onClick={() => handleViewProfile(user.id)}
-                          className="view-profile-btn"
-                        >
-                          <AiOutlineEye />
-                          View Profile
-                        </button>
+                        <Link to={"/dashboard/user/:id"} className="users__action-btn" style={{textDecoration:"none"}}>
+                          <AiOutlineEye size={16} />
+                          View
+                        </Link>
                       </td>
                     </tr>
                   ))
@@ -206,56 +147,51 @@ const AllUsers = () => {
           </div>
 
           {/* Mobile Cards */}
-          <div className="mobile-cards">
-            {filteredUsers.length === 0 ? (
-              <div className="no-data-mobile">
+          <div className="users__mobile-cards">
+            {paginatedUsers.length === 0 ? (
+              <div className="users__no-data-mobile">
                 {searchTerm ? 'No members found matching your search' : 'No members found'}
               </div>
             ) : (
-              filteredUsers.map((user) => (
-                <div key={user.id} className="user-card">
-                  <div className="user-card-header">
-                    <div className="user-card-info">
-                      <div className="user-avatar">
+              paginatedUsers.map((user) => (
+                <div key={user.id} className="users__card">
+                  <div className="users__card-header">
+                    <div className="users__card-info">
+                      <div className="users__avatar">
                         <span>
-                          {(user.firstName?.charAt(0) || '').toUpperCase()}
-                          {(user.lastName?.charAt(0) || '').toUpperCase()}
+                          {user.firstName.charAt(0)}
+                          {user.lastName.charAt(0)}
                         </span>
                       </div>
                       <div>
-                        <h3 className="user-card-name">
-                          {user.firstName || ''} {user.lastName || ''}
-                        </h3>
-                        <p className="user-card-id">{user.uniqueId || 'N/A'}</p>
+                        <h3 className="users__card-name">{user.firstName} {user.lastName}</h3>
+                        <p className="users__card-id">{user.uniqueId}</p>
                       </div>
                     </div>
-                    <span className={`badge ${user.status ? 'badge-active' : 'badge-inactive'}`}>
+                    <span className={`users__badge users__badge--${user.status ? 'active' : 'inactive'}`}>
                       {user.status ? 'Active' : 'Inactive'}
                     </span>
                   </div>
                   
-                  <div className="user-card-details">
-                    <div className="user-card-row">
-                      <span className="label">Phone:</span>
-                      <span className="value">{user.phone || 'N/A'}</span>
+                  <div className="users__card-body">
+                    <div className="users__card-row">
+                      <span className="users__card-label">Phone:</span>
+                      <span className="users__card-value">{user.phone}</span>
                     </div>
-                    <div className="user-card-row">
-                      <span className="label">Email:</span>
-                      <span className="value">{user.email || 'N/A'}</span>
+                    <div className="users__card-row">
+                      <span className="users__card-label">Email:</span>
+                      <span className="users__card-value">{user.email}</span>
                     </div>
-                    <div className="user-card-row">
-                      <span className="label">Subscription:</span>
-                      <span className={`badge ${user.subscriptionType ? 'badge-success' : 'badge-gray'}`}>
-                        {user.subscriptionType || 'None'}
+                    <div className="users__card-row">
+                      <span className="users__card-label">Subscription:</span>
+                      <span className={`users__badge users__badge--${user.subscriptionType !== 'None' ? 'success' : 'gray'}`}>
+                        {user.subscriptionType}
                       </span>
                     </div>
                   </div>
                   
-                  <button
-                    onClick={() => handleViewProfile(user.id)}
-                    className="view-profile-btn-mobile"
-                  >
-                    <AiOutlineEye />
+                  <button className="users__card-btn">
+                    <AiOutlineEye size={16} />
                     View Profile
                   </button>
                 </div>
@@ -266,16 +202,16 @@ const AllUsers = () => {
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div className="pagination-container">
-            <div className="pagination-info">
+          <div className="users__pagination">
+            <div className="users__pagination-info">
               Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, totalUsers)} of {totalUsers} entries
             </div>
             
-            <div className="pagination-controls">
+            <div className="users__pagination-controls">
               <button
                 onClick={() => handlePageChange(1)}
                 disabled={currentPage === 1}
-                className="pagination-btn"
+                className="users__pagination-btn"
                 title="First page"
               >
                 <MdKeyboardDoubleArrowLeft />
@@ -283,20 +219,20 @@ const AllUsers = () => {
               <button
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className="pagination-btn"
+                className="users__pagination-btn"
                 title="Previous page"
               >
                 <MdChevronLeft />
               </button>
               
-              <span className="pagination-page">
+              <span className="users__pagination-page">
                 Page {currentPage} of {totalPages}
               </span>
               
               <button
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className="pagination-btn"
+                className="users__pagination-btn"
                 title="Next page"
               >
                 <MdChevronRight />
@@ -304,7 +240,7 @@ const AllUsers = () => {
               <button
                 onClick={() => handlePageChange(totalPages)}
                 disabled={currentPage === totalPages}
-                className="pagination-btn"
+                className="users__pagination-btn"
                 title="Last page"
               >
                 <MdKeyboardDoubleArrowRight />
@@ -314,7 +250,7 @@ const AllUsers = () => {
             <select
               value={itemsPerPage}
               onChange={(e) => handleItemsPerPageChange(Number(e.target.value))}
-              className="items-per-page-select"
+              className="users__items-select"
             >
               <option value={10}>10 per page</option>
               <option value={25}>25 per page</option>
@@ -324,7 +260,8 @@ const AllUsers = () => {
           </div>
         )}
       </div>
-    </div>
+
+       </div>
   );
 };
 

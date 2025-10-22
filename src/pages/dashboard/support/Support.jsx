@@ -1,91 +1,61 @@
-import React, { useState, useEffect } from 'react'
-import { FiSearch, FiMail, FiCalendar, FiAlertCircle, FiLoader } from 'react-icons/fi'
-import { getAllSupports, getSupportBySenderId } from '../../../services/supportService.js'
-import './Support.css'
+import React, { useState } from 'react';
+import { FiSearch, FiMail, FiCalendar, FiX } from 'react-icons/fi';
+import './Support.css';
 
 const Support = () => {
-  const [allSupports, setAllSupports] = useState([])
-  const [filteredSupports, setFilteredSupports] = useState([])
-  const [searchSenderId, setSearchSenderId] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const [selectedSupport, setSelectedSupport] = useState(null)
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedSupport, setSelectedSupport] = useState(null);
 
-  // Fetch all support queries on component mount
-  useEffect(() => {
-    fetchAllSupports()
-  }, [])
-
-  const fetchAllSupports = async () => {
-    setLoading(true)
-    setError('')
-    try {
-      const data = await getAllSupports()
-      setAllSupports(data)
-      setFilteredSupports(data)
-    } catch (err) {
-      console.error('Error fetching supports:', err)
-      setError(err.message || 'Failed to fetch support queries')
-      
-      // Mock data for demonstration if API fails
-      const mockData = [
-        {
-          id: 1,
-          sender_id: 'USER001',
-          email: 'user1@example.com',
-          query: 'How do I reset my password?',
-          created_at: '2024-10-10T10:30:00Z'
-        },
-        {
-          id: 2,
-          sender_id: 'USER002',
-          email: 'user2@example.com',
-          query: 'I cannot access my account',
-          created_at: '2024-10-09T14:15:00Z'
-        },
-        {
-          id: 3,
-          sender_id: 'USER003',
-          email: 'user3@example.com',
-          query: 'How to update my profile information?',
-          created_at: '2024-10-08T09:45:00Z'
-        }
-      ]
-      setAllSupports(mockData)
-      setFilteredSupports(mockData)
-    } finally {
-      setLoading(false)
+  // Mock data
+  const supports = [
+    {
+      id: 1,
+      sender_id: 'USER001',
+      email: 'user1@example.com',
+      query: 'How do I reset my password?',
+      created_at: '2024-10-10T10:30:00Z'
+    },
+    {
+      id: 2,
+      sender_id: 'USER002',
+      email: 'user2@example.com',
+      query: 'I cannot access my account',
+      created_at: '2024-10-09T14:15:00Z'
+    },
+    {
+      id: 3,
+      sender_id: 'USER003',
+      email: 'user3@example.com',
+      query: 'How to update my profile information?',
+      created_at: '2024-10-08T09:45:00Z'
+    },
+    {
+      id: 4,
+      sender_id: 'USER004',
+      email: 'user4@example.com',
+      query: 'Equipment booking issue',
+      created_at: '2024-10-07T16:20:00Z'
+    },
+    {
+      id: 5,
+      sender_id: 'USER005',
+      email: 'user5@example.com',
+      query: 'Membership renewal problem',
+      created_at: '2024-10-06T11:45:00Z'
+    },
+    {
+      id: 6,
+      sender_id: 'USER006',
+      email: 'user6@example.com',
+      query: 'Payment not processed',
+      created_at: '2024-10-05T13:30:00Z'
     }
-  }
+  ];
 
-  const handleSearch = async (e) => {
-    e.preventDefault()
-    
-    if (!searchSenderId.trim()) {
-      setFilteredSupports(allSupports)
-      return
-    }
-
-    setLoading(true)
-    setError('')
-    try {
-      const data = await getSupportBySenderId(searchSenderId)
-      setFilteredSupports([data])
-    } catch (err) {
-      console.error('Error searching support:', err)
-      setError(err.message || 'Support query not found')
-      setFilteredSupports([])
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const handleReset = () => {
-    setSearchSenderId('')
-    setFilteredSupports(allSupports)
-    setSelectedSupport(null)
-    setError('')
-  }
+  const filteredSupports = supports.filter(support =>
+    support.sender_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    support.email.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -94,81 +64,50 @@ const Support = () => {
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit'
-    })
-  }
+    });
+  };
 
   return (
-    <div className="support__wrapper">
-      <div className="support__container">
-        <h1 className="support__title">Support Queries</h1>
-        <p className="support__subtitle">Manage and view all customer support requests</p>
-
-        {/* Search Card */}
-        <div className="support__search-card">
-          <div className="support__search-form">
-            <div className="support__form-group" style={{ flex: 1 }}>
-              <label className="support__form-label">Search by Sender ID</label>
-              <input
-                type="text"
-                className="support__form-input"
-                placeholder="Enter sender ID (e.g., USER001)"
-                value={searchSenderId}
-                onChange={(e) => setSearchSenderId(e.target.value)}
-              />
-            </div>
-            <button 
-              onClick={handleSearch} 
-              className="support__search-btn"
-              disabled={loading}
-            >
-              <FiSearch size={18} />
-              Search
-            </button>
-            <button 
-              onClick={handleReset} 
-              className="support__reset-btn"
-              disabled={loading}
-            >
-              Reset
-            </button>
+    <div className="support__container">
+      <div className="support__wrapper">
+        {/* Header */}
+        <div className="support__header">
+          <div>
+            <h1 className="support__title">Support Queries</h1>
+            <p className="support__subtitle">Manage and view all customer support requests</p>
           </div>
         </div>
 
-        {/* Error Message */}
-        {error && (
-          <div className="support__error">
-            <FiAlertCircle size={20} />
-            <span>{error}</span>
+        {/* Search Card */}
+        <div className="support__search-card">
+          <div className="support__search-wrapper">
+            <FiSearch className="support__search-icon" />
+            <input
+              type="text"
+              className="support__search-input"
+              placeholder="Search by sender ID or email..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
-        )}
-
-        {/* Loading State */}
-        {loading && (
-          <div className="support__loading">
-            <FiLoader size={20} className="support__loading-icon" />
-            Loading support queries...
-          </div>
-        )}
-
-        {/* No Results */}
-        {!loading && filteredSupports.length === 0 && (
-          <div className="support__no-results">
-            <div className="support__no-results-icon">📭</div>
-            <p className="support__no-results-text">No support queries found</p>
-          </div>
-        )}
+        </div>
 
         {/* Results Grid */}
-        {!loading && filteredSupports.length > 0 && (
-          <div className="support__results-grid">
-            {filteredSupports.map((support) => (
+        <div className="support__results-grid">
+          {filteredSupports.length === 0 ? (
+            <div className="support__no-results">
+              <div className="support__no-results-icon">📭</div>
+              <p className="support__no-results-text">No support queries found</p>
+            </div>
+          ) : (
+            filteredSupports.map((support) => (
               <div
                 key={support.id}
                 className="support__card"
                 onClick={() => setSelectedSupport(support)}
               >
                 <div className="support__card-header">
-                  <div className="support__sender-id">{support.sender_id}</div>
+                  <span className="support__sender-badge">{support.sender_id}</span>
                 </div>
 
                 <div className="support__card-info">
@@ -185,9 +124,9 @@ const Support = () => {
                   <span>{formatDate(support.created_at)}</span>
                 </div>
               </div>
-            ))}
-          </div>
-        )}
+            ))
+          )}
+        </div>
 
         {/* Modal for full view */}
         {selectedSupport && (
@@ -205,7 +144,7 @@ const Support = () => {
                   className="support__modal-close"
                   onClick={() => setSelectedSupport(null)}
                 >
-                  ×
+                  <FiX size={24} />
                 </button>
               </div>
               <div className="support__modal-body">
@@ -233,7 +172,7 @@ const Support = () => {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Support
+export default Support;

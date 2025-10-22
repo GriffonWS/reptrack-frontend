@@ -1,0 +1,295 @@
+:root {
+          --primary: #f26722;
+          --secondary: #333333;
+          --bg-light: #f8fafc;
+          --card-bg: #ffffff;
+          --text-dark: #1e293b;
+          --text-muted: #64748b;
+          --border: #e2e8f0;
+          --radius: 0.5rem;
+          --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .aerobic__container {
+          min-height: calc(100vh - 70px);
+          background-color: var(--bg-light);
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+        }
+
+        .aerobic__wrapper {
+          max-width: 1400px;
+          margin: 0 auto;
+        }
+
+        /* ==================== HEADER ==================== */
+        .aerobic__header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 2rem;
+          margin-bottom: 2rem;
+          flex-wrap: wrap;
+          animation: fadeIn 0.5s ease;
+        }
+
+        .aerobic__title {
+          font-size: 2rem;
+          font-weight: 700;
+          color: var(--text-dark);
+          margin: 0;
+          letter-spacing: -0.5px;
+        }
+
+        .aerobic__add-btn {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          background: linear-gradient(135deg, var(--primary), #e55a24);
+          color: white;
+          padding: 0.75rem 1.5rem;
+          border: none;
+          border-radius: 8px;
+          font-size: 0.9375rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: var(--transition);
+          box-shadow: 0 2px 8px rgba(242, 103, 34, 0.2);
+          white-space: nowrap;
+        }
+
+        .aerobic__add-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 16px rgba(242, 103, 34, 0.3);
+        }
+
+        /* ==================== SEARCH ==================== */
+        .aerobic__search-box {
+          background-color: var(--card-bg);
+          border-radius: 10px;
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+          border: 1px solid var(--border);
+          padding: 1.25rem;
+          margin-bottom: 2rem;
+        }
+
+        .aerobic__search-wrapper {
+          position: relative;
+          max-width: 400px;
+        }
+
+        .aerobic__search-icon {
+          position: absolute;
+          right: 1rem;
+          top: 50%;
+          transform: translateY(-50%);
+          color: var(--text-muted);
+          width: 20px;
+          height: 20px;
+          cursor: pointer;
+        }
+
+        .aerobic__search-input {
+          width: 100%;
+          padding: 0.75rem 2.75rem 0.75rem 1rem;
+          border: 1.5px solid var(--border);
+          border-radius: 8px;
+          font-size: 0.9375rem;
+          font-family: inherit;
+          outline: none;
+          transition: var(--transition);
+          background-color: var(--bg-light);
+        }
+
+        .aerobic__search-input:focus {
+          border-color: var(--primary);
+          background-color: white;
+          box-shadow: 0 0 0 3px rgba(242, 103, 34, 0.1);
+        }
+
+        .aerobic__search-input::placeholder {
+          color: var(--text-muted);
+        }
+
+        /* ==================== GRID & CARDS ==================== */
+        .aerobic__grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+          gap: 1.5rem;
+        }
+
+        .aerobic__no-data {
+          grid-column: 1 / -1;
+          text-align: center;
+          padding: 3rem 2rem;
+          color: var(--text-muted);
+          font-size: 0.9375rem;
+        }
+
+        .aerobic__card {
+          background-color: var(--card-bg);
+          border-radius: 10px;
+          border: 1px solid var(--border);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+          overflow: hidden;
+          transition: var(--transition);
+          animation: fadeInUp 0.5s ease;
+          position: relative;
+          cursor: pointer;
+        }
+
+        .aerobic__card:hover {
+          border-color: var(--primary);
+          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(12px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        .aerobic__card-image {
+          width: 100%;
+          aspect-ratio: 1 / 1;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: linear-gradient(135deg, var(--bg-light), white);
+          border-bottom: 1px solid var(--border);
+        }
+
+        .aerobic__image-placeholder {
+          font-size: 4rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          height: 100%;
+        }
+
+        .aerobic__card-badge {
+          position: absolute;
+          top: 0.75rem;
+          right: 0.75rem;
+          background: linear-gradient(135deg, var(--primary), #e55a24);
+          color: white;
+          padding: 0.5rem 0.875rem;
+          border-radius: 8px;
+          font-weight: 700;
+          font-size: 1rem;
+          box-shadow: 0 2px 8px rgba(242, 103, 34, 0.3);
+          min-width: 40px;
+          text-align: center;
+        }
+
+        .aerobic__card-content {
+          padding: 1.25rem;
+          text-align: center;
+        }
+
+        .aerobic__card-name {
+          font-size: 0.9375rem;
+          font-weight: 700;
+          color: var(--text-dark);
+          margin: 0;
+          line-height: 1.4;
+        }
+
+        /* ==================== RESPONSIVE ==================== */
+        @media (max-width: 1024px) {
+          .aerobic__grid {
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 1.25rem;
+          }
+
+          .aerobic__header {
+            gap: 1rem;
+          }
+        }
+
+        @media (max-width: 768px) {
+          
+
+          .aerobic__title {
+            font-size: 1.5rem;
+          }
+
+          .aerobic__header {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 1rem;
+          }
+
+          .aerobic__add-btn {
+            width: 100%;
+            justify-content: center;
+          }
+
+          .aerobic__search-wrapper {
+            max-width: 100%;
+          }
+
+          .aerobic__grid {
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1rem;
+          }
+
+          .aerobic__image-placeholder {
+            font-size: 3rem;
+          }
+
+          .aerobic__card-content {
+            padding: 1rem;
+          }
+
+          .aerobic__card-name {
+            font-size: 0.875rem;
+          }
+        }
+
+        @media (max-width: 480px) {
+          
+          .aerobic__title {
+            font-size: 1.25rem;
+          }
+
+          .aerobic__grid {
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 0.75rem;
+          }
+
+          .aerobic__card-badge {
+            top: 0.5rem;
+            right: 0.5rem;
+            padding: 0.375rem 0.75rem;
+            font-size: 0.875rem;
+          }
+
+          .aerobic__card-content {
+            padding: 0.875rem;
+          }
+
+          .aerobic__card-name {
+            font-size: 0.8125rem;
+          }
+
+          .aerobic__image-placeholder {
+            font-size: 2.5rem;
+          }
+        }

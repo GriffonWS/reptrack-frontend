@@ -1,112 +1,113 @@
-import React, { useState } from 'react'
-import { FaEye, FaEyeSlash } from 'react-icons/fa'
-import logo from '../../assets/logo (1).png'
-import './auth.css'
-import { loginAdmin } from '../../services/auth/authServices.js'  // ✅ Import your login service
 
+import React, { useState } from 'react';
+import { FiEye, FiEyeOff } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
+import './auth.css';
+import logo from '../../assets/logo.png';
 const Login = () => {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [showPassword, setShowPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-    setIsLoading(true)
-    try {
-      // ✅ Call backend login API
-      const response = await loginAdmin(email, password)
-      console.log('✅ Login successful:', response)
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-      // Redirect after token is saved
-      window.location.href = '/dashboard'
-    } catch (error) {
-      console.error('❌ Login failed:', error)
-      alert(error?.message || 'Invalid credentials. Please try again.')
-    } finally {
-      setIsLoading(false)
-      setEmail('')
-      setPassword('')
-    }
-  }
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    console.log('Login attempted:', formData);
+    
+    // Simulate API call
+    setTimeout(() => {
+      setIsLoading(false);
+      console.log('Login successful');
+      setFormData({ email: '', password: '' });
+    }, 1500);
+  };
 
   return (
-    <>
-      <div className="login-container">
-        <div className="login-wrapper">
-          <div className="login-left">
-            <div className="login-form-wrapper">
-              <div className="logo">
-                <div className="logo-icon">
-                  <img src={logo} alt="" />
-                </div>
+    <div className="login-container">
+      <div className="login-wrapper">
+        {/* Left Section */}
+        <div className="login-left">
+          <div className="login-form-wrapper">
+            {/* Logo */}
+            <div className="logo">
+              <img src={logo} alt="Logo" className="logo-image" />
+            </div>
+           
+
+            {/* Form */}
+            <div className="login-form">
+              {/* Email Field */}
+              <div className="form-group">
+                <label className="form-label">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  className="form-input"
+                  placeholder="admin@example.com"
+                  value={formData.email}
+                  onChange={handleChange}
+                  disabled={isLoading}
+                />
               </div>
 
-              <div className="login-form">
-                <div className="form-group">
-                  <label className="form-label">Email</label>
-                  <input
-                    type="email"
-                    className="form-input"
-                    placeholder="Example@email.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                </div>
-
-                <div className="form-group password-group">
-                  <label className="form-label">Password</label>
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    className="form-input"
-                    placeholder="At least 8 characters"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                  />
-                  <button
-                    type="button"
-                    className="password-toggle"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
-                  </button>
-                </div>
-
-                <div className="forgot-password">
-                  <a onClick={() => alert('Forgot password clicked')}>
-                    Forgot Password?
-                  </a>
-                </div>
-
-                {/* ✅ Real login here */}
+              {/* Password Field */}
+              <div className="form-group password-group">
+                <label className="form-label">Password</label>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  className="form-input"
+                  placeholder="Enter your password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  disabled={isLoading}
+                />
                 <button
                   type="button"
-                  className="submit-btn"
+                  className="password-toggle"
+                  onClick={() => setShowPassword(!showPassword)}
                   disabled={isLoading}
-                  onClick={handleSubmit}
                 >
-                  {isLoading ? 'Signing in...' : 'Sign in'}
+                  {showPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
                 </button>
               </div>
 
-              <div className="signup-link">
-                Don't you have an account? <a href='/Register'>Sign up</a>
-              </div>
+              {/* Submit Button */}
+              <button
+                type="submit"
+                className="submit-btn"
+                disabled={isLoading}
+                onClick={handleSubmit}
+              >
+                {isLoading ? 'Signing in...' : 'Sign In'}
+              </button>
+            </div>
+
+            {/* Sign Up Link */}
+            <div className="signup-link">
+              Don't have an account? <Link to="/register">Sign Up</Link>
             </div>
           </div>
+        </div>
 
-          <div className="login-right">
-            <img
-              src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=80"
-              alt="Gym"
-            />
-          </div>
+        {/* Right Section - Image */}
+        <div className="login-right">
+          <img
+            src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=600&q=80"
+            alt="Gym"
+          />
         </div>
       </div>
-    </>
-  )
-}
-
-export default Login
+    </div>
+  );
+};
+export default Login;

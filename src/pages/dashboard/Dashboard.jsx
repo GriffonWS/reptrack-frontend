@@ -23,9 +23,9 @@ const Dashboard = () => {
     <div className="dashboard">
       <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
       <Navbar toggleSidebar={toggleSidebar} sidebarOpen={sidebarOpen} />
-
-      <main className={`main-content ${!sidebarOpen ? 'expanded' : ''}`}>
-        <Outlet /> {/* 👈 Nested dashboard pages will render here */}
+      <main className={`main-content ${!sidebarOpen ? 'main-content--expanded' : ''}`}>
+        <Outlet />
+        
       </main>
     </div>
   );

@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { FiSearch, FiBell, FiChevronDown, FiUser, FiLock, FiLogOut, FiX, FiEye, FiEyeOff } from 'react-icons/fi';
 import { HiOutlineMenu } from 'react-icons/hi';
 
 const Navbar = ({ toggleSidebar, sidebarOpen }) => {
+  const navigate = useNavigate();
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
   const [changePasswordOpen, setChangePasswordOpen] = useState(false);
   const [oldPassword, setOldPassword] = useState('');
@@ -15,14 +17,12 @@ const Navbar = ({ toggleSidebar, sidebarOpen }) => {
   const [passwordSuccess, setPasswordSuccess] = useState('');
   const dropdownRef = useRef(null);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setProfileDropdownOpen(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
@@ -50,98 +50,94 @@ const Navbar = ({ toggleSidebar, sidebarOpen }) => {
   const handleUpdatePassword = () => {
     setPasswordError('');
     setPasswordSuccess('');
-
     if (!oldPassword || !newPassword || !confirmPassword) {
       setPasswordError('All fields are required');
       return;
     }
-
     if (newPassword.length < 8) {
       setPasswordError('New password must be at least 8 characters');
       return;
     }
-
     if (newPassword !== confirmPassword) {
       setPasswordError('New password and confirm password do not match');
       return;
     }
-
     if (oldPassword === newPassword) {
       setPasswordError('New password cannot be the same as old password');
       return;
     }
-
-    // Simulate API call
     setPasswordSuccess('Password updated successfully!');
     setTimeout(() => {
       handleCloseModal();
     }, 2000);
   };
 
+  const handleLogout = () => {
+    navigate('/login');
+  };
 
   return (
     <>
-      
-      <header className={`navbar ${!sidebarOpen ? 'full-width' : ''}`}>
-        <div className="navbar-content">
-          {/* Left Side */}
-          <div className="navbar-left">
-            <button className="sidebar-toggle" onClick={toggleSidebar}>
+      <header className={`navbar ${!sidebarOpen ? 'navbar--full-width' : ''}`}>
+        <div className="navbar__content">
+          {/* Navbar Left */}
+          <div className="navbar__left">
+            <button className="navbar__toggle" onClick={toggleSidebar}>
               <HiOutlineMenu size={24} />
             </button>
-
-            {/* Search Bar */}
-            <div className="search-bar">
-              <FiSearch className="search-icon" size={18} />
-              <input 
-                type="text" 
-                placeholder="Search..." 
-                className="search-input"
+            <div className="navbar__search">
+              <FiSearch className="navbar__search-icon" size={18} />
+              <input
+                type="text"
+                placeholder="Search..."
+                className="navbar__search-input"
               />
             </div>
           </div>
 
-          {/* Right Side */}
-          <div className="navbar-right">
-            {/* Notification Button */}
-            <button className="notification-btn">
+          {/* Navbar Right */}
+          <div className="navbar__right">
+            <button className="navbar__notification">
               <FiBell size={22} />
-              <span className="notification-badge">3</span>
+              <span className="navbar__badge">3</span>
             </button>
 
-            {/* Profile Section with Dropdown */}
-            <div className="profile-wrapper" ref={dropdownRef}>
-              <div className="profile-section" onClick={toggleProfileDropdown}>
-                <div className="profile-avatar">JD</div>
-                <div className="profile-info">
-                  <p className="profile-name">John Doe</p>
-                  <p className="profile-role">Administrator</p>
+            {/* Profile Section */}
+            <div className="navbar__profile" ref={dropdownRef}>
+              <div className="navbar__profile-section" onClick={toggleProfileDropdown}>
+                <div className="navbar__avatar">JD</div>
+                <div className="navbar__info">
+                  <p className="navbar__name">John Doe</p>
+                  <p className="navbar__role">Administrator</p>
                 </div>
-                <FiChevronDown 
-                  className={`profile-chevron ${profileDropdownOpen ? 'rotate' : ''}`} 
-                  size={18} 
+                <FiChevronDown
+                  className={`navbar__chevron ${profileDropdownOpen ? 'navbar__chevron--active' : ''}`}
+                  size={18}
                 />
               </div>
 
-              {/* Profile Dropdown Menu */}
+              {/* Profile Dropdown */}
               {profileDropdownOpen && (
-                <div className="profile-dropdown">
-                  <a href="/dashboard/profile" className="dropdown-item">
+                <div className="navbar__dropdown">
+                  <Link to="/dashboard/profile" className="navbar__dropdown-item">
                     <FiUser size={18} />
                     <span>My Account</span>
-                  </a>
-                  <button 
-                    className="dropdown-item"
+                  </Link>
+                  <button
+                    className="navbar__dropdown-item"
                     onClick={handleChangePasswordClick}
                   >
                     <FiLock size={18} />
                     <span>Change Password</span>
                   </button>
-                  <div className="dropdown-divider"></div>
-                  <a href="#" className="dropdown-item logout">
+                  <div className="navbar__divider"></div>
+                  <button 
+                    className="navbar__dropdown-item navbar__dropdown-item--logout"
+                    onClick={handleLogout}
+                  >
                     <FiLogOut size={18} />
                     <span>Logout</span>
-                  </a>
+                  </button>
                 </div>
               )}
             </div>
@@ -151,102 +147,117 @@ const Navbar = ({ toggleSidebar, sidebarOpen }) => {
 
       {/* Change Password Modal */}
       {changePasswordOpen && (
-        <div className="modal-overlay" onClick={handleCloseModal}>
-          <div className="modal-container" onClick={(e) => e.stopPropagation()}>
+        <div className="modal__overlay" onClick={handleCloseModal}>
+          <div
+            className="modal__container"
+            onClick={(e) => e.stopPropagation()}
+          >
             {/* Modal Header */}
-            <div className="modal-header">
-              <h2 className="modal-title">Change Password</h2>
-              <button className="modal-close-btn" onClick={handleCloseModal}>
+            <div className="modal__header">
+              <h2 className="modal__title">Change Password</h2>
+              <button
+                className="modal__close"
+                onClick={handleCloseModal}
+              >
                 <FiX size={24} />
               </button>
             </div>
 
             {/* Modal Body */}
-            <div className="modal-body">
+            <div className="modal__body">
               {/* Old Password */}
-              <div className="modal-form-group">
-                <label className="modal-label">Old Password</label>
-                <div className="password-input-wrapper">
+              <div className="modal__form-group">
+                <label className="modal__label">Old Password</label>
+                <div className="modal__input-wrapper">
                   <input
                     type={showOldPassword ? 'text' : 'password'}
-                    className="modal-input"
+                    className="modal__input"
                     placeholder="Enter your old password"
                     value={oldPassword}
                     onChange={(e) => setOldPassword(e.target.value)}
                   />
                   <button
                     type="button"
-                    className="password-toggle-btn"
+                    className="modal__toggle-btn"
                     onClick={() => setShowOldPassword(!showOldPassword)}
                   >
-                    {showOldPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                    {showOldPassword ? (
+                      <FiEyeOff size={18} />
+                    ) : (
+                      <FiEye size={18} />
+                    )}
                   </button>
                 </div>
               </div>
 
               {/* New Password */}
-              <div className="modal-form-group">
-                <label className="modal-label">New Password</label>
-                <div className="password-input-wrapper">
+              <div className="modal__form-group">
+                <label className="modal__label">New Password</label>
+                <div className="modal__input-wrapper">
                   <input
                     type={showNewPassword ? 'text' : 'password'}
-                    className="modal-input"
+                    className="modal__input"
                     placeholder="Enter your new password"
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                   />
                   <button
                     type="button"
-                    className="password-toggle-btn"
+                    className="modal__toggle-btn"
                     onClick={() => setShowNewPassword(!showNewPassword)}
                   >
-                    {showNewPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                    {showNewPassword ? (
+                      <FiEyeOff size={18} />
+                    ) : (
+                      <FiEye size={18} />
+                    )}
                   </button>
                 </div>
               </div>
 
               {/* Confirm Password */}
-              <div className="modal-form-group">
-                <label className="modal-label">Confirm New Password</label>
-                <div className="password-input-wrapper">
+              <div className="modal__form-group">
+                <label className="modal__label">Confirm New Password</label>
+                <div className="modal__input-wrapper">
                   <input
                     type={showConfirmPassword ? 'text' : 'password'}
-                    className="modal-input"
+                    className="modal__input"
                     placeholder="Confirm your new password"
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                   />
                   <button
                     type="button"
-                    className="password-toggle-btn"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="modal__toggle-btn"
+                    onClick={() =>
+                      setShowConfirmPassword(!showConfirmPassword)
+                    }
                   >
-                    {showConfirmPassword ? <FiEyeOff size={18} /> : <FiEye size={18} />}
+                    {showConfirmPassword ? (
+                      <FiEyeOff size={18} />
+                    ) : (
+                      <FiEye size={18} />
+                    )}
                   </button>
                 </div>
               </div>
 
-              {/* Error Message */}
+              {/* Error & Success Messages */}
               {passwordError && (
-                <span className="modal-error">{passwordError}</span>
+                <div className="modal__error">{passwordError}</div>
               )}
-
-              {/* Success Message */}
               {passwordSuccess && (
-                <span className="modal-success">{passwordSuccess}</span>
+                <div className="modal__success">{passwordSuccess}</div>
               )}
             </div>
 
             {/* Modal Footer */}
-            <div className="modal-footer">
-              <button 
-                className="modal-btn modal-btn-cancel"
-                onClick={handleCloseModal}
-              >
+            <div className="modal__footer">
+              <button className="modal__btn modal__btn--cancel" onClick={handleCloseModal}>
                 Cancel
               </button>
-              <button 
-                className="modal-btn modal-btn-update"
+              <button
+                className="modal__btn modal__btn--update"
                 onClick={handleUpdatePassword}
               >
                 Update Password
