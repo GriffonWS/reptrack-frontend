@@ -1,34 +1,51 @@
 
 import React, { useState } from 'react';
 import { FiEye, FiEyeOff } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './auth.css';
 import logo from '../../assets/logo.png';
+import { loginUser } from '../../services/auth/authService';
+import { setToken } from '../../utils/token';
+
 const Login = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: '',
+    uniqueId: '',
     password: ''
   });
 
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    setError(''); // Clear error on input change
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    console.log('Login attempted:', formData);
-    
-    // Simulate API call
-    setTimeout(() => {
+    setError('');
+
+    try {
+      const response = await loginUser(formData);
+
+      if (response.success && response.data.token) {
+        // Store token in localStorage
+        setToken(response.data.token);
+
+        // Navigate to dashboard
+        navigate('/dashboard');
+      } else {
+        setError(response.message || 'Login failed');
+      }
+    } catch (err) {
+      setError(err.message || 'An error occurred during login');
+    } finally {
       setIsLoading(false);
-      console.log('Login successful');
-      setFormData({ email: '', password: '' });
-    }, 1500);
+    }
   };
 
   return (
@@ -45,17 +62,25 @@ const Login = () => {
 
             {/* Form */}
             <div className="login-form">
-              {/* Email Field */}
+              {/* Error Message */}
+              {error && (
+                <div className="error-message">
+                  {error}
+                </div>
+              )}
+
+              {/* Unique ID Field */}
               <div className="form-group">
-                <label className="form-label">Email</label>
+                <label className="form-label">Unique ID</label>
                 <input
-                  type="email"
-                  name="email"
+                  type="text"
+                  name="uniqueId"
                   className="form-input"
-                  placeholder="admin@example.com"
-                  value={formData.email}
+                  placeholder="RT-20"
+                  value={formData.uniqueId}
                   onChange={handleChange}
                   disabled={isLoading}
+                  required
                 />
               </div>
 
@@ -70,6 +95,7 @@ const Login = () => {
                   value={formData.password}
                   onChange={handleChange}
                   disabled={isLoading}
+                  required
                 />
                 <button
                   type="button"

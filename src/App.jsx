@@ -1,5 +1,5 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import Dashboard from './pages/dashboard/Dashboard';
 import Register from './pages/auth/Register';
 import Login from './pages/auth/Login';
@@ -19,6 +19,27 @@ import EditUserProfile from './pages/dashboard/allUsers/EditUserProfile';
 import AddUser from './pages/dashboard/allUsers/AddUser';
 
 const App = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
+
+    // Handle root path
+    if (location.pathname === '/') {
+      if (token) {
+        navigate('/dashboard');
+      } else {
+        navigate('/login');
+      }
+    }
+    // Handle other protected routes
+    else if (!token && !isAuthPage) {
+      navigate('/login');
+    }
+  }, [location.pathname, navigate]);
+
   return (
     <Routes>
       {/* Auth routes */}
