@@ -1,31 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { AiOutlineEye, AiOutlineSearch } from 'react-icons/ai';
 import { AiOutlinePlus } from 'react-icons/ai';
 import { MdChevronLeft, MdChevronRight, MdKeyboardDoubleArrowLeft, MdKeyboardDoubleArrowRight } from 'react-icons/md';
 import './AllUsers.css';
 import { Link } from 'react-router-dom';
+import { getAllUsers } from '../../../services/user/userService';
+import Loader from '../../../components/Loader/Loader';
+
 const AllUsers = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0); // API uses 0-based pagination
   const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [users, setUsers] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
-  // Mock data
-  const mockUsers = [
-    { id: 1, firstName: 'John', lastName: 'Doe', phone: '9876543210', email: 'john@example.com', subscriptionType: 'Premium', uniqueId: 'MEM001', status: true },
-    { id: 2, firstName: 'Jane', lastName: 'Smith', phone: '9876543211', email: 'jane@example.com', subscriptionType: 'Standard', uniqueId: 'MEM002', status: true },
-    { id: 3, firstName: 'Mike', lastName: 'Johnson', phone: '9876543212', email: 'mike@example.com', subscriptionType: 'Premium', uniqueId: 'MEM003', status: false },
-    { id: 4, firstName: 'Sarah', lastName: 'Williams', phone: '9876543213', email: 'sarah@example.com', subscriptionType: 'Standard', uniqueId: 'MEM004', status: true },
-    { id: 5, firstName: 'David', lastName: 'Brown', phone: '9876543214', email: 'david@example.com', subscriptionType: 'Premium', uniqueId: 'MEM005', status: true },
-    { id: 6, firstName: 'Emma', lastName: 'Davis', phone: '9876543215', email: 'emma@example.com', subscriptionType: 'None', uniqueId: 'MEM006', status: false },
-    { id: 7, firstName: 'Robert', lastName: 'Miller', phone: '9876543216', email: 'robert@example.com', subscriptionType: 'Standard', uniqueId: 'MEM007', status: true },
-    { id: 8, firstName: 'Lisa', lastName: 'Wilson', phone: '9876543217', email: 'lisa@example.com', subscriptionType: 'Premium', uniqueId: 'MEM008', status: true },
-    { id: 9, firstName: 'James', lastName: 'Moore', phone: '9876543218', email: 'james@example.com', subscriptionType: 'Standard', uniqueId: 'MEM009', status: true },
-    { id: 10, firstName: 'Mary', lastName: 'Taylor', phone: '9876543219', email: 'mary@example.com', subscriptionType: 'Premium', uniqueId: 'MEM010', status: false },
-    { id: 11, firstName: 'Thomas', lastName: 'Anderson', phone: '9876543220', email: 'thomas@example.com', subscriptionType: 'Standard', uniqueId: 'MEM011', status: true },
-    { id: 12, firstName: 'Jennifer', lastName: 'Thomas', phone: '9876543221', email: 'jennifer@example.com', subscriptionType: 'Premium', uniqueId: 'MEM012', status: true },
-  ];
+  useEffect(() => {
+    fetchUsers();
+  }, [currentPage, itemsPerPage]);
 
-  const filteredUsers = mockUsers.filter(user => {
+  const fetchUsers = async () => {
+    try {
+      setIsLoading(true);
+      setError('');
+      const response = await getAllUsers(currentPage, itemsPerPage);
+
+      if (response.success && response.data) {
+        setUsers(response.data.content || []);
+        setTotalUsers(response.data.totalElements || 0);
+        setTotalPages(response.data.totalPages || 0);
+      }
+    } catch (err) {
+      setError(err.message || 'Failed to fetch users');
+      console.error('Error fetching users:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  // Client-side filtering for search
+  const filteredUsers = users.filter(user => {
     if (!searchTerm) return true;
     const searchLower = searchTerm.toLowerCase();
     return (
@@ -37,20 +53,24 @@ const AllUsers = () => {
     );
   });
 
-  const totalUsers = filteredUsers.length;
-  const totalPages = Math.ceil(totalUsers / itemsPerPage);
-  const paginatedUsers = filteredUsers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
-
   const handlePageChange = (newPage) => {
-    if (newPage >= 1 && newPage <= totalPages) {
+    if (newPage >= 0 && newPage < totalPages) {
       setCurrentPage(newPage);
     }
   };
 
   const handleItemsPerPageChange = (newItemsPerPage) => {
     setItemsPerPage(newItemsPerPage);
-    setCurrentPage(1);
+    setCurrentPage(0); // Reset to first page
   };
+
+  if (isLoading) {
+    return (
+      <div className="users__container">
+        <Loader />
+      </div>
+    );
+  }
 
   return (
     <div className="users__container">
@@ -66,6 +86,20 @@ const AllUsers = () => {
             Add Member
           </Link>
         </div>
+
+        {/* Error Message */}
+        {error && (
+          <div className="users__error" style={{
+            padding: '12px 16px',
+            marginBottom: '20px',
+            backgroundColor: '#fff5f5',
+            color: '#c53030',
+            border: '1px solid #fc8181',
+            borderRadius: '8px'
+          }}>
+            {error}
+          </div>
+        )}
 
         {/* Search Bar */}
         <div className="users__search-box">
@@ -99,22 +133,22 @@ const AllUsers = () => {
                 </tr>
               </thead>
               <tbody>
-                {paginatedUsers.length === 0 ? (
+                {filteredUsers.length === 0 ? (
                   <tr>
                     <td colSpan="8" className="users__no-data">
                       {searchTerm ? 'No members found matching your search' : 'No members found'}
                     </td>
                   </tr>
                 ) : (
-                  paginatedUsers.map((user, index) => (
+                  filteredUsers.map((user, index) => (
                     <tr key={user.id}>
-                      <td>{((currentPage - 1) * itemsPerPage) + index + 1}</td>
+                      <td>{(currentPage * itemsPerPage) + index + 1}</td>
                       <td>
                         <div className="users__name-cell">
                           <div className="users__avatar">
                             <span>
-                              {user.firstName.charAt(0)}
-                              {user.lastName.charAt(0)}
+                              {user.firstName?.charAt(0) || 'U'}
+                              {user.lastName?.charAt(0) || 'U'}
                             </span>
                           </div>
                           <span className="users__name">{user.firstName} {user.lastName}</span>
@@ -129,12 +163,12 @@ const AllUsers = () => {
                       </td>
                       <td className="users__member-id">{user.uniqueId}</td>
                       <td>
-                        <span className={`users__badge users__badge--${user.status ? 'active' : 'inactive'}`}>
-                          {user.status ? 'Active' : 'Inactive'}
+                        <span className={`users__badge users__badge--${user.active ? 'active' : 'inactive'}`}>
+                          {user.active ? 'Active' : 'Inactive'}
                         </span>
                       </td>
                       <td>
-                        <Link to={"/dashboard/user/:id"} className="users__action-btn" style={{textDecoration:"none"}}>
+                        <Link to={`/dashboard/user/${user.id}`} className="users__action-btn" style={{textDecoration:"none"}}>
                           <AiOutlineEye size={16} />
                           View
                         </Link>
@@ -148,19 +182,19 @@ const AllUsers = () => {
 
           {/* Mobile Cards */}
           <div className="users__mobile-cards">
-            {paginatedUsers.length === 0 ? (
+            {filteredUsers.length === 0 ? (
               <div className="users__no-data-mobile">
                 {searchTerm ? 'No members found matching your search' : 'No members found'}
               </div>
             ) : (
-              paginatedUsers.map((user) => (
+              filteredUsers.map((user) => (
                 <div key={user.id} className="users__card">
                   <div className="users__card-header">
                     <div className="users__card-info">
                       <div className="users__avatar">
                         <span>
-                          {user.firstName.charAt(0)}
-                          {user.lastName.charAt(0)}
+                          {user.firstName?.charAt(0) || 'U'}
+                          {user.lastName?.charAt(0) || 'U'}
                         </span>
                       </div>
                       <div>
@@ -168,11 +202,11 @@ const AllUsers = () => {
                         <p className="users__card-id">{user.uniqueId}</p>
                       </div>
                     </div>
-                    <span className={`users__badge users__badge--${user.status ? 'active' : 'inactive'}`}>
-                      {user.status ? 'Active' : 'Inactive'}
+                    <span className={`users__badge users__badge--${user.active ? 'active' : 'inactive'}`}>
+                      {user.active ? 'Active' : 'Inactive'}
                     </span>
                   </div>
-                  
+
                   <div className="users__card-body">
                     <div className="users__card-row">
                       <span className="users__card-label">Phone:</span>
@@ -189,11 +223,11 @@ const AllUsers = () => {
                       </span>
                     </div>
                   </div>
-                  
-                  <button className="users__card-btn">
+
+                  <Link to={`/dashboard/user/${user.id}`} className="users__card-btn" style={{textDecoration:"none"}}>
                     <AiOutlineEye size={16} />
                     View Profile
-                  </button>
+                  </Link>
                 </div>
               ))
             )}
@@ -204,13 +238,13 @@ const AllUsers = () => {
         {totalPages > 1 && (
           <div className="users__pagination">
             <div className="users__pagination-info">
-              Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, totalUsers)} of {totalUsers} entries
+              Showing {(currentPage * itemsPerPage) + 1} to {Math.min((currentPage + 1) * itemsPerPage, totalUsers)} of {totalUsers} entries
             </div>
-            
+
             <div className="users__pagination-controls">
               <button
-                onClick={() => handlePageChange(1)}
-                disabled={currentPage === 1}
+                onClick={() => handlePageChange(0)}
+                disabled={currentPage === 0}
                 className="users__pagination-btn"
                 title="First page"
               >
@@ -218,28 +252,28 @@ const AllUsers = () => {
               </button>
               <button
                 onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
+                disabled={currentPage === 0}
                 className="users__pagination-btn"
                 title="Previous page"
               >
                 <MdChevronLeft />
               </button>
-              
+
               <span className="users__pagination-page">
-                Page {currentPage} of {totalPages}
+                Page {currentPage + 1} of {totalPages}
               </span>
-              
+
               <button
                 onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
+                disabled={currentPage === totalPages - 1}
                 className="users__pagination-btn"
                 title="Next page"
               >
                 <MdChevronRight />
               </button>
               <button
-                onClick={() => handlePageChange(totalPages)}
-                disabled={currentPage === totalPages}
+                onClick={() => handlePageChange(totalPages - 1)}
+                disabled={currentPage === totalPages - 1}
                 className="users__pagination-btn"
                 title="Last page"
               >

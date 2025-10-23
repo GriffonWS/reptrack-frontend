@@ -219,6 +219,30 @@
           color: var(--primary);
         }
 
+        .adduser__btn:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+          pointer-events: none;
+        }
+
+        /* ==================== ERROR STYLES ==================== */
+        .adduser__input--error {
+          border-color: #ef4444;
+          background-color: #fef2f2;
+        }
+
+        .adduser__input--error:focus {
+          border-color: #dc2626;
+          box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+        }
+
+        .adduser__error {
+          font-size: 0.8125rem;
+          color: #dc2626;
+          font-weight: 500;
+          margin-top: -0.25rem;
+        }
+
         /* ==================== RESPONSIVE ==================== */
         @media (max-width: 768px) {
           

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiSearch, FiBell, FiChevronDown, FiUser, FiLock, FiLogOut, FiX, FiEye, FiEyeOff } from 'react-icons/fi';
 import { HiOutlineMenu } from 'react-icons/hi';
+import { removeToken } from '../utils/token';
 
 const Navbar = ({ toggleSidebar, sidebarOpen }) => {
   const navigate = useNavigate();
@@ -73,6 +74,11 @@ const Navbar = ({ toggleSidebar, sidebarOpen }) => {
   };
 
   const handleLogout = () => {
+    // Remove token from localStorage
+    removeToken();
+    // Close dropdown
+    setProfileDropdownOpen(false);
+    // Navigate to login page
     navigate('/login');
   };
 
