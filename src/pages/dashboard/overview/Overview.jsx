@@ -132,7 +132,7 @@ const Overview = () => {
       <div className="overview__container">
         {/* Header */}
         <div className="overview__header">
-          <h1 className="overview__title">Dashboard</h1>
+          <h1 className="overview__title">Dashboards</h1>
         </div>
 
         {/* Error Message */}
