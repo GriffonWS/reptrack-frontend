@@ -1,158 +1,305 @@
-
-import React, { useState } from 'react';
-import { FiArrowLeft, FiUpload } from 'react-icons/fi';
-import './EditProfile.css';
+import React, { useState, useEffect } from "react";
+import { FiArrowLeft, FiUpload } from "react-icons/fi";
+import { Link } from "react-router-dom";
+import "./EditProfile.css";
+import { getGymOwnerByToken, updateGymOwner } from "../../../services/gymOwner/gymOwnerService";
+import Loader from "../../../components/Loader/Loader";
 
 const EditProfile = () => {
   const [formData, setFormData] = useState({
-    firstName: 'Natasha',
-    lastName: 'Khaleira',
-    email: 'info@binary-fusion.com',
-    role: 'Admin'
+    ownerName: "",
+    gymName: "",
+    email: "",
+    uniqueId: "",
+    phoneNumber: "",
+    address: "",
+    profileImage: "",
+    gymLogo: "",
   });
 
-  const [profileImage, setProfileImage] = useState(null);
-  const [previewImage, setPreviewImage] = useState('https://api.dicebear.com/7.x/avataaars/svg?seed=Natasha');
-  const [loading, setLoading] = useState(false);
+  const [preview, setPreview] = useState({
+    profileImage: "",
+    gymLogo: "",
+  });
 
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+
+  // ✅ Fetch existing profile
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await getGymOwnerByToken();
+        if (response.success && response.data) {
+          const data = response.data;
+          setFormData({
+            ownerName: data.ownerName || "",
+            gymName: data.gymName || "",
+            email: data.email || "",
+            uniqueId: data.uniqueId || "",
+            phoneNumber: data.phoneNumber || "",
+            address: data.address || "",
+            profileImage: data.profileImage || "",
+            gymLogo: data.gymLogo || "",
+          });
+          setPreview({
+            profileImage: data.profileImage || "",
+            gymLogo: data.gymLogo || "",
+          });
+        } else {
+          setError("Failed to load profile data.");
+        }
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProfile();
+  }, []);
+
+  // ✅ Handle text field changes
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
+  // ✅ Handle file uploads
+  const handleFileChange = (e) => {
+    const { name, files } = e.target;
+    const file = files[0];
     if (file) {
-      setProfileImage(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setPreviewImage(reader.result);
-      };
-      reader.readAsDataURL(file);
+      setFormData({ ...formData, [name]: file });
+      setPreview({ ...preview, [name]: URL.createObjectURL(file) });
     }
   };
 
-  const handleSubmit = (e) => {
+  // ✅ Save updates
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Profile updated:', formData, profileImage);
+    setSaving(true);
+    setError("");
+
+    try {
+      const updatedForm = new FormData();
+      
+      // ⚠️ IMPORTANT: Append ALL text fields (backend expects them)
+      updatedForm.append("ownerName", formData.ownerName || "");
+      updatedForm.append("gymName", formData.gymName || "");
+      updatedForm.append("phoneNumber", formData.phoneNumber || "");
+      updatedForm.append("address", formData.address || "");
+      
+      // Append files only if they are new File objects
+      if (formData.profileImage instanceof File) {
+        updatedForm.append("profile_image", formData.profileImage);
+      }
+      if (formData.gymLogo instanceof File) {
+        updatedForm.append("gym_logo", formData.gymLogo);
+      }
+
+      const response = await updateGymOwner(updatedForm);
+      if (response.success) {
+        alert("Profile updated successfully!");
+        // Refresh data
+        if (response.data) {
+          setFormData({
+            ownerName: response.data.ownerName || "",
+            gymName: response.data.gymName || "",
+            email: response.data.email || "",
+            uniqueId: response.data.uniqueId || "",
+            phoneNumber: response.data.phoneNumber || "",
+            address: response.data.address || "",
+            profileImage: response.data.profileImage || "",
+            gymLogo: response.data.gymLogo || "",
+          });
+          setPreview({
+            profileImage: response.data.profileImage || "",
+            gymLogo: response.data.gymLogo || "",
+          });
+        }
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSaving(false);
+    }
   };
 
+  // ✅ Reset form to original fetched data
   const handleCancel = () => {
-    console.log('Edit cancelled');
+    window.location.reload();
   };
+
+  if (loading) return <Loader />;
+  if (error) return <p className="error-text">{error}</p>;
 
   return (
-    <div className="editadmin__wrapper">
+    <div className="editprofile__wrapper">
       {/* Back Button */}
-      <button className="editadmin__back-btn">
+      <Link to="/dashboard/profile" className="editprofile__back-btn">
         <FiArrowLeft size={20} />
         Back
-      </button>
+      </Link>
 
-      {/* Container */}
-      <div className="editadmin__container">
-        {/* Header */}
-        <div className="editadmin__header">
-          <h1 className="editadmin__title">Edit Admin Profile</h1>
-          <p className="editadmin__subtitle">Update your profile information</p>
+      {/* Form Container */}
+      <div className="editprofile__container">
+        <div className="editprofile__header">
+          <h1 className="editprofile__title">Edit Gym Owner Profile</h1>
+          <p className="editprofile__subtitle">Update your gym information</p>
         </div>
 
-        {/* Form Wrapper */}
-        <div className="editadmin__form-wrapper">
+        <form className="editprofile__form-wrapper" onSubmit={handleSubmit}>
           {/* Image Section */}
-          <div className="editadmin__image-section">
-            <div className="editadmin__avatar">
-              <img src={previewImage} alt="Profile" />
+          <div className="editprofile__image-section">
+            <div className="editprofile__image-group">
+              <div className="editprofile__avatar">
+                {preview.profileImage ? (
+                  <img src={preview.profileImage} alt="Profile" />
+                ) : (
+                  <FiUser size={48} />
+                )}
+              </div>
+              <div>
+                <label className="editprofile__upload-btn">
+                  <FiUpload size={18} />
+                  Upload Profile Image
+                  <input
+                    type="file"
+                    name="profileImage"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="editprofile__file-input"
+                  />
+                </label>
+                <p className="editprofile__upload-hint">JPG, PNG up to 5MB</p>
+              </div>
             </div>
-            <label className="editadmin__upload-btn">
-              <FiUpload size={18} />
-              Upload Image
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="editadmin__file-input"
-              />
-            </label>
-            <p className="editadmin__upload-hint">JPG, PNG up to 5MB</p>
+
+            <div className="editprofile__image-group">
+              <div className="editprofile__avatar">
+                {preview.gymLogo ? (
+                  <img src={preview.gymLogo} alt="Gym Logo" />
+                ) : (
+                  <FiUser size={48} />
+                )}
+              </div>
+              <div>
+                <label className="editprofile__upload-btn">
+                  <FiUpload size={18} />
+                  Upload Gym Logo
+                  <input
+                    type="file"
+                    name="gymLogo"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="editprofile__file-input"
+                  />
+                </label>
+                <p className="editprofile__upload-hint">JPG, PNG up to 5MB</p>
+              </div>
+            </div>
           </div>
 
           {/* Form Grid */}
-          <div className="editadmin__form-grid">
-            {/* First Name */}
-            <div className="editadmin__form-group">
-              <label className="editadmin__label">First Name</label>
+          <div className="editprofile__form-grid">
+            {/* Owner Name */}
+            <div className="editprofile__form-group">
+              <label className="editprofile__label">Owner Name *</label>
               <input
                 type="text"
-                name="firstName"
-                value={formData.firstName}
+                name="ownerName"
+                value={formData.ownerName}
                 onChange={handleChange}
-                className="editadmin__input"
-                placeholder="Enter first name"
+                className="editprofile__input"
+                placeholder="Enter owner name"
+                required
               />
             </div>
 
-            {/* Last Name */}
-            <div className="editadmin__form-group">
-              <label className="editadmin__label">Last Name</label>
+            {/* Gym Name */}
+            <div className="editprofile__form-group">
+              <label className="editprofile__label">Gym Name *</label>
               <input
                 type="text"
-                name="lastName"
-                value={formData.lastName}
+                name="gymName"
+                value={formData.gymName}
                 onChange={handleChange}
-                className="editadmin__input"
-                placeholder="Enter last name"
+                className="editprofile__input"
+                placeholder="Enter gym name"
+                required
               />
             </div>
 
-            {/* Email (Read-only) */}
-            <div className="editadmin__form-group">
-              <label className="editadmin__label">Email Address</label>
+            {/* Email */}
+            <div className="editprofile__form-group">
+              <label className="editprofile__label">Email</label>
               <input
-                type="email"
-                name="email"
+                type="text"
                 value={formData.email}
-                className="editadmin__input editadmin__input--readonly"
                 disabled
+                className="editprofile__input"
               />
-              <p className="editadmin__helper-text">Email cannot be changed</p>
             </div>
 
-            {/* Role */}
-            <div className="editadmin__form-group">
-              <label className="editadmin__label">Role</label>
+            {/* Unique ID */}
+            <div className="editprofile__form-group">
+              <label className="editprofile__label">Unique ID</label>
               <input
                 type="text"
-                name="role"
-                value={formData.role}
-                onChange={handleChange}
-                className="editadmin__input"
-                placeholder="Enter role"
+                value={formData.uniqueId}
+                disabled
+                className="editprofile__input"
               />
+            </div>
+
+            {/* Phone Number */}
+            <div className="editprofile__form-group">
+              <label className="editprofile__label">Phone Number</label>
+              <input
+                type="text"
+                name="phoneNumber"
+                value={formData.phoneNumber}
+                onChange={handleChange}
+                className="editprofile__input"
+                placeholder="Enter phone number"
+              />
+            </div>
+
+            {/* Address */}
+            <div className="editprofile__form-group editprofile__form-group--fullwidth">
+              <label className="editprofile__label">Address</label>
+              <textarea
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                rows="2"
+                className="editprofile__input"
+                placeholder="Enter address"
+              ></textarea>
             </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="editadmin__actions">
+          <div className="editprofile__actions">
             <button
               type="button"
               onClick={handleCancel}
-              className="editadmin__btn editadmin__btn--cancel"
+              className="editprofile__btn editprofile__btn--cancel"
             >
               Cancel
             </button>
             <button
-              type="button"
-              onClick={handleSubmit}
-              disabled={loading}
-              className="editadmin__btn editadmin__btn--save"
+              type="submit"
+              disabled={saving}
+              className="editprofile__btn editprofile__btn--save"
             >
-              {loading ? 'Saving...' : 'Save Changes'}
+              {saving ? "Saving..." : "Save Changes"}
             </button>
           </div>
-        </div>
+        </form>
       </div>
     </div>
-    );
+  );
 };
+
 export default EditProfile;

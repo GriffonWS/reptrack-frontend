@@ -1,60 +1,56 @@
-import React, { useState } from 'react';
-import { FiSearch, FiMail, FiCalendar, FiX } from 'react-icons/fi';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { FiSearch, FiMail, FiCalendar, FiX, FiAlertCircle } from 'react-icons/fi';
+import { getAllSupportQueries } from '../../../services/support/supportService';
+import { removeToken } from '../../../utils/token';
 import './Support.css';
 
 const Support = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedSupport, setSelectedSupport] = useState(null);
+  const [supports, setSupports] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  // Mock data
-  const supports = [
-    {
-      id: 1,
-      sender_id: 'USER001',
-      email: 'user1@example.com',
-      query: 'How do I reset my password?',
-      created_at: '2024-10-10T10:30:00Z'
-    },
-    {
-      id: 2,
-      sender_id: 'USER002',
-      email: 'user2@example.com',
-      query: 'I cannot access my account',
-      created_at: '2024-10-09T14:15:00Z'
-    },
-    {
-      id: 3,
-      sender_id: 'USER003',
-      email: 'user3@example.com',
-      query: 'How to update my profile information?',
-      created_at: '2024-10-08T09:45:00Z'
-    },
-    {
-      id: 4,
-      sender_id: 'USER004',
-      email: 'user4@example.com',
-      query: 'Equipment booking issue',
-      created_at: '2024-10-07T16:20:00Z'
-    },
-    {
-      id: 5,
-      sender_id: 'USER005',
-      email: 'user5@example.com',
-      query: 'Membership renewal problem',
-      created_at: '2024-10-06T11:45:00Z'
-    },
-    {
-      id: 6,
-      sender_id: 'USER006',
-      email: 'user6@example.com',
-      query: 'Payment not processed',
-      created_at: '2024-10-05T13:30:00Z'
+  // Fetch support queries on component mount
+  useEffect(() => {
+    fetchSupportQueries();
+  }, []);
+
+  const fetchSupportQueries = async () => {
+    try {
+      setIsLoading(true);
+      setError('');
+      const response = await getAllSupportQueries();
+
+      if (response.success && response.data) {
+        // Sort by created_at in descending order (most recent first)
+        const sortedData = response.data.sort((a, b) => {
+          return new Date(b.created_at) - new Date(a.created_at);
+        });
+        setSupports(sortedData);
+      } else {
+        setError('Failed to load support queries');
+      }
+    } catch (err) {
+      console.error('Error fetching support queries:', err);
+      setError(err.message || 'Failed to load support queries');
+
+      // If unauthorized, redirect to login
+      if (err.message.includes('Unauthorized') || err.message.includes('token')) {
+        removeToken();
+        navigate('/login');
+      }
+    } finally {
+      setIsLoading(false);
     }
-  ];
+  };
 
   const filteredSupports = supports.filter(support =>
     support.sender_id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    support.email.toLowerCase().includes(searchTerm.toLowerCase())
+    (support.email && support.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
+    support.query.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const formatDate = (dateString) => {
@@ -92,14 +88,42 @@ const Support = () => {
           </div>
         </div>
 
-        {/* Results Grid */}
-        <div className="support__results-grid">
-          {filteredSupports.length === 0 ? (
-            <div className="support__no-results">
-              <div className="support__no-results-icon">📭</div>
-              <p className="support__no-results-text">No support queries found</p>
+        {/* Error Message */}
+        {error && (
+          <div className="support__error-card">
+            <FiAlertCircle className="support__error-icon" />
+            <div>
+              <p className="support__error-title">Error Loading Support Queries</p>
+              <p className="support__error-message">{error}</p>
+              <button
+                className="support__error-retry"
+                onClick={fetchSupportQueries}
+              >
+                Retry
+              </button>
             </div>
-          ) : (
+          </div>
+        )}
+
+        {/* Loading State */}
+        {isLoading && (
+          <div className="support__loading">
+            <div className="support__loading-spinner"></div>
+            <p className="support__loading-text">Loading support queries...</p>
+          </div>
+        )}
+
+        {/* Results Grid */}
+        {!isLoading && !error && (
+          <div className="support__results-grid">
+            {filteredSupports.length === 0 ? (
+              <div className="support__no-results">
+                <div className="support__no-results-icon">📭</div>
+                <p className="support__no-results-text">
+                  {searchTerm ? 'No support queries match your search' : 'No support queries found'}
+                </p>
+              </div>
+            ) : (
             filteredSupports.map((support) => (
               <div
                 key={support.id}
@@ -125,8 +149,9 @@ const Support = () => {
                 </div>
               </div>
             ))
-          )}
-        </div>
+            )}
+          </div>
+        )}
 
         {/* Modal for full view */}
         {selectedSupport && (

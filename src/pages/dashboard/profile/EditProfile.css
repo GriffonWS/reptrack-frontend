@@ -1,328 +1,390 @@
-  :root {
-          --primary: #f26722;
-          --secondary: #333333;
-          --bg-light: #f8fafc;
-          --card-bg: #ffffff;
-          --text-dark: #1e293b;
-          --text-muted: #64748b;
-          --border: #e2e8f0;
-          --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+:root {
+  --primary: #f26722;
+  --secondary: #333333;
+  --bg-light: #f8fafc;
+  --card-bg: #ffffff;
+  --text-dark: #1e293b;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-        .editadmin__wrapper {
-          min-height: calc(100vh - 70px);
-          background-color: var(--bg-light);
-          padding: 0;
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-        }
+/* ==================== LOADING & ERROR STATES ==================== */
+.loading-text,
+.error-text {
+  text-align: center;
+  padding: 3rem;
+  font-size: 1rem;
+  font-weight: 500;
+}
 
-        /* ==================== BACK BUTTON ==================== */
-        .editadmin__back-btn {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          background: none;
-          border: none;
-          color: var(--primary);
-          font-weight: 600;
-          cursor: pointer;
-          padding: 1.5rem 2rem 0 2rem;
-          font-size: 0.9375rem;
-          transition: var(--transition);
-        }
+.loading-text {
+  color: var(--text-muted);
+}
 
-        .editadmin__back-btn:hover {
-          color: #e55a24;
-          gap: 0.75rem;
-        }
+.error-text {
+  color: #dc2626;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  margin: 2rem;
+}
 
-        /* ==================== CONTAINER ==================== */
-        .editadmin__container {
-         
-          margin: 1.5rem auto;
-          background-color: var(--card-bg);
-          border-radius: 12px;
-          border: 1px solid var(--border);
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-          animation: fadeInUp 0.5s ease;
-          overflow: hidden;
-        }
+/* ==================== MAIN WRAPPER ==================== */
+.editprofile__wrapper {
+  min-height: calc(100vh - 70px);
+  background-color: var(--bg-light);
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(12px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
+/* ==================== BACK BUTTON ==================== */
+.editprofile__back-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 1.5rem 2rem 0 2rem;
+  font-size: 0.9375rem;
+  transition: var(--transition);
+  text-decoration: none;
+}
 
-        /* ==================== HEADER ==================== */
-        .editadmin__header {
-          padding: 2rem;
-          border-bottom: 1px solid var(--border);
-          background: linear-gradient(135deg, rgba(242, 103, 34, 0.02), rgba(242, 103, 34, 0.01));
-        }
+.editprofile__back-btn:hover {
+  color: #e55a24;
+  gap: 0.75rem;
+}
 
-        .editadmin__title {
-          font-size: 1.75rem;
-          font-weight: 700;
-          color: var(--text-dark);
-          margin: 0 0 0.5rem 0;
-          letter-spacing: -0.5px;
-        }
+/* ==================== CONTAINER ==================== */
+.editprofile__container {
+  max-width: 1200px;
+  margin: 1.5rem auto;
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  animation: fadeInUp 0.5s ease;
+}
 
-        .editadmin__subtitle {
-          font-size: 0.9375rem;
-          color: var(--text-muted);
-          margin: 0;
-          font-weight: 500;
-        }
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-        /* ==================== FORM WRAPPER ==================== */
-        .editadmin__form-wrapper {
-          padding: 2rem;
-        }
+/* ==================== HEADER ==================== */
+.editprofile__header {
+  padding: 2rem;
+  border-bottom: 1px solid var(--border);
+}
 
-        /* ==================== IMAGE SECTION ==================== */
-        .editadmin__image-section {
-          display: flex;
-          align-items: center;
-          gap: 2rem;
-          margin-bottom: 2.5rem;
-          padding-bottom: 2rem;
-          border-bottom: 1px solid var(--border);
-        }
+.editprofile__title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.5px;
+}
 
-        .editadmin__avatar {
-          width: 100px;
-          height: 100px;
-          border-radius: 50%;
-          overflow: hidden;
-          flex-shrink: 0;
-          border: 3px solid var(--border);
-          box-shadow: 0 4px 12px rgba(242, 103, 34, 0.2);
-        }
+.editprofile__subtitle {
+  font-size: 0.9375rem;
+  color: var(--text-muted);
+  margin: 0;
+  font-weight: 500;
+}
 
-        .editadmin__avatar img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
+/* ==================== FORM WRAPPER ==================== */
+.editprofile__form-wrapper {
+  padding: 2rem;
+}
 
-        .editadmin__file-input {
-          display: none;
-        }
+/* ==================== IMAGE SECTION ==================== */
+.editprofile__image-section {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+}
 
-        .editadmin__upload-btn {
-          display: flex;
-          align-items: center;
-          gap: 0.5rem;
-          background: linear-gradient(135deg, var(--primary), #e55a24);
-          color: white;
-          padding: 0.75rem 1.5rem;
-          border-radius: 8px;
-          font-size: 0.9375rem;
-          font-weight: 600;
-          cursor: pointer;
-          transition: var(--transition);
-          box-shadow: 0 2px 8px rgba(242, 103, 34, 0.2);
-          border: none;
-          font-family: inherit;
-        }
+.editprofile__image-group {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
 
-        .editadmin__upload-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 16px rgba(242, 103, 34, 0.3);
-        }
+.editprofile__avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), #e55a24);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 3px solid var(--border);
+  box-shadow: 0 4px 12px rgba(242, 103, 34, 0.2);
+}
 
-        .editadmin__upload-hint {
-          font-size: 0.8125rem;
-          color: var(--text-muted);
-          margin-top: 0.5rem;
-        }
+.editprofile__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  
+}
 
-        /* ==================== FORM GRID ==================== */
-        .editadmin__form-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-          gap: 1.5rem;
-          margin-bottom: 2rem;
-        }
+.editprofile__file-input {
+  display: none;
+}
 
-        .editadmin__form-group {
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
-        }
+.editprofile__upload-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, var(--primary), #e55a24);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 2px 8px rgba(242, 103, 34, 0.2);
+  border: none;
+  font-family: inherit;
+}
 
-        /* ==================== LABELS & INPUTS ==================== */
-        .editadmin__label {
-          font-size: 0.875rem;
-          font-weight: 600;
-          color: var(--text-dark);
-        }
+.editprofile__upload-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(242, 103, 34, 0.3);
+}
 
-        .editadmin__input {
-          padding: 0.75rem 1rem;
-          border: 1.5px solid var(--border);
-          border-radius: 8px;
-          font-size: 0.9375rem;
-          font-family: inherit;
-          outline: none;
-          transition: var(--transition);
-          background-color: var(--bg-light);
-        }
+.editprofile__upload-hint {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+}
 
-        .editadmin__input:focus {
-          border-color: var(--primary);
-          background-color: white;
-          box-shadow: 0 0 0 3px rgba(242, 103, 34, 0.1);
-        }
+/* ==================== FORM GRID ==================== */
+.editprofile__form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
 
-        .editadmin__input--readonly {
-          background-color: #f5f5f5;
-          color: var(--text-muted);
-          cursor: not-allowed;
-        }
+.editprofile__form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
 
-        .editadmin__input--readonly:focus {
-          border-color: var(--border);
-          box-shadow: none;
-          background-color: #f5f5f5;
-        }
+.editprofile__form-group--fullwidth {
+  grid-column: 1 / -1;
+}
 
-        .editadmin__input::placeholder {
-          color: var(--text-muted);
-        }
+/* ==================== LABELS & INPUTS ==================== */
+.editprofile__label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
 
-        .editadmin__helper-text {
-          font-size: 0.75rem;
-          color: var(--text-muted);
-          margin-top: -0.25rem;
-        }
+.editprofile__input {
+  padding: 0.75rem 1rem;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  outline: none;
+  transition: var(--transition);
+  background-color: var(--bg-light);
+}
 
-        /* ==================== ACTIONS ==================== */
-        .editadmin__actions {
-          display: flex;
-          gap: 1rem;
-          justify-content: flex-end;
-          padding-top: 1.5rem;
-          border-top: 1px solid var(--border);
-        }
+.editprofile__input:focus {
+  border-color: var(--primary);
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(242, 103, 34, 0.1);
+}
 
-        .editadmin__btn {
-          padding: 0.75rem 2rem;
-          border: none;
-          border-radius: 8px;
-          font-size: 0.9375rem;
-          font-weight: 600;
-          cursor: pointer;
-          transition: var(--transition);
-          font-family: inherit;
-        }
+.editprofile__input:disabled {
+  background-color: #f5f5f5;
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
 
-        .editadmin__btn--save {
-          background: linear-gradient(135deg, var(--primary), #e55a24);
-          color: white;
-          box-shadow: 0 2px 8px rgba(242, 103, 34, 0.2);
-        }
+.editprofile__input:disabled:focus {
+  border-color: var(--border);
+  box-shadow: none;
+  background-color: #f5f5f5;
+}
 
-        .editadmin__btn--save:hover:not(:disabled) {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 16px rgba(242, 103, 34, 0.3);
-        }
+.editprofile__input::placeholder {
+  color: var(--text-muted);
+}
 
-        .editadmin__btn--save:disabled {
-          opacity: 0.6;
-          cursor: not-allowed;
-        }
+textarea.editprofile__input {
+  resize: vertical;
+  min-height: 80px;
+}
 
-        .editadmin__btn--cancel {
-          background-color: transparent;
-          color: var(--text-dark);
-          border: 1.5px solid var(--border);
-        }
+/* ==================== ACTIONS ==================== */
+.editprofile__actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
 
-        .editadmin__btn--cancel:hover {
-          border-color: var(--primary);
-          background-color: var(--bg-light);
-          color: var(--primary);
-        }
+.editprofile__btn {
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+}
 
-        /* ==================== RESPONSIVE ==================== */
-        @media (max-width: 768px) {
-          .editadmin__container {
-            margin: 1rem;
-          }
+.editprofile__btn--save {
+  background: linear-gradient(135deg, var(--primary), #e55a24);
+  color: white;
+  box-shadow: 0 2px 8px rgba(242, 103, 34, 0.2);
+}
 
-          .editadmin__header {
-            padding: 1.5rem;
-          }
+.editprofile__btn--save:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(242, 103, 34, 0.3);
+}
 
-          .editadmin__form-wrapper {
-            padding: 1.5rem;
-          }
+.editprofile__btn--save:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
-          .editadmin__back-btn {
-            padding: 1rem 1rem 0 1rem;
-          }
+.editprofile__btn--cancel {
+  background-color: transparent;
+  color: var(--text-dark);
+  border: 1.5px solid var(--border);
+}
 
-          .editadmin__title {
-            font-size: 1.5rem;
-          }
+.editprofile__btn--cancel:hover {
+  border-color: var(--primary);
+  background-color: var(--bg-light);
+  color: var(--primary);
+}
 
-          .editadmin__image-section {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 1.5rem;
-            margin-bottom: 1.5rem;
-            padding-bottom: 1.5rem;
-          }
+/* ==================== RESPONSIVE DESIGN ==================== */
+@media (max-width: 1024px) {
+  .editprofile__form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
 
-          .editadmin__form-grid {
-            grid-template-columns: 1fr;
-            gap: 1.25rem;
-          }
+@media (max-width: 768px) {
+  .editprofile__container {
+    margin: 1rem;
+    border-radius: 10px;
+  }
 
-          .editadmin__actions {
-            flex-direction: column;
-          }
+  .editprofile__header {
+    padding: 1.5rem;
+  }
 
-          .editadmin__btn {
-            width: 100%;
-          }
-        }
+  .editprofile__form-wrapper {
+    padding: 1.5rem;
+  }
 
-        @media (max-width: 480px) {
-          .editadmin__container {
-            margin: 0.75rem;
-            border-radius: 10px;
-          }
+  .editprofile__back-btn {
+    padding: 1rem 1rem 0 1rem;
+  }
 
-          .editadmin__header {
-            padding: 1.25rem;
-          }
+  .editprofile__title {
+    font-size: 1.5rem;
+  }
 
-          .editadmin__form-wrapper {
-            padding: 1.25rem;
-          }
+  .editprofile__image-section {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
 
-          .editadmin__back-btn {
-            padding: 1rem 0.75rem 0 0.75rem;
-            font-size: 0.875rem;
-          }
+  .editprofile__image-group {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
 
-          .editadmin__title {
-            font-size: 1.25rem;
-          }
+  .editprofile__form-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
 
-          .editadmin__avatar {
-            width: 80px;
-            height: 80px;
-          }
-        }
+  .editprofile__actions {
+    flex-direction: column;
+  }
+
+  .editprofile__btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .editprofile__container {
+    margin: 0.75rem;
+  }
+
+  .editprofile__header {
+    padding: 1.25rem;
+  }
+
+  .editprofile__form-wrapper {
+    padding: 1.25rem;
+  }
+
+  .editprofile__back-btn {
+    padding: 1rem 0.75rem 0 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  .editprofile__title {
+    font-size: 1.25rem;
+  }
+
+  .editprofile__avatar {
+    width: 80px;
+    height: 80px;
+  }
+
+  .editprofile__upload-btn {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+  }
+
+  .editprofile__input {
+    font-size: 0.875rem;
+  }
+
+  .editprofile__btn {
+    padding: 0.625rem 1.5rem;
+    font-size: 0.875rem;
+  }
+}

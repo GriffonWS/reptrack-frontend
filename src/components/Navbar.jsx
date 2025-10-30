@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FiSearch, FiBell, FiChevronDown, FiUser, FiLock, FiLogOut, FiX, FiEye, FiEyeOff } from 'react-icons/fi';
 import { HiOutlineMenu } from 'react-icons/hi';
 import { removeToken } from '../utils/token';
+import { getGymOwnerByToken, changePassword as changePasswordAPI, logout as logoutAPI } from '../services/gymOwner/gymOwnerService';
 
 const Navbar = ({ toggleSidebar, sidebarOpen }) => {
   const navigate = useNavigate();
@@ -16,7 +17,16 @@ const Navbar = ({ toggleSidebar, sidebarOpen }) => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [passwordError, setPasswordError] = useState('');
   const [passwordSuccess, setPasswordSuccess] = useState('');
+  const [isPasswordLoading, setIsPasswordLoading] = useState(false);
+  const [gymOwnerData, setGymOwnerData] = useState(null);
+  const [isLoadingProfile, setIsLoadingProfile] = useState(true);
+  const [profileError, setProfileError] = useState('');
   const dropdownRef = useRef(null);
+
+  // Fetch gym owner data on mount
+  useEffect(() => {
+    fetchGymOwnerData();
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -27,6 +37,41 @@ const Navbar = ({ toggleSidebar, sidebarOpen }) => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
+  const fetchGymOwnerData = async () => {
+    try {
+      setIsLoadingProfile(true);
+      setProfileError('');
+      const response = await getGymOwnerByToken();
+
+      if (response.success && response.data) {
+        setGymOwnerData(response.data);
+      } else {
+        setProfileError('Failed to load profile data');
+      }
+    } catch (error) {
+      console.error('Error fetching gym owner data:', error);
+      setProfileError(error.message || 'Failed to load profile');
+
+      // If unauthorized, redirect to login
+      if (error.message.includes('Unauthorized') || error.message.includes('token')) {
+        removeToken();
+        navigate('/login');
+      }
+    } finally {
+      setIsLoadingProfile(false);
+    }
+  };
+
+  // Get initials from owner name
+  const getInitials = (name) => {
+    if (!name) return 'GO';
+    const names = name.trim().split(' ');
+    if (names.length === 1) {
+      return names[0].substring(0, 2).toUpperCase();
+    }
+    return (names[0][0] + names[names.length - 1][0]).toUpperCase();
+  };
 
   const toggleProfileDropdown = () => {
     setProfileDropdownOpen(!profileDropdownOpen);
@@ -48,15 +93,17 @@ const Navbar = ({ toggleSidebar, sidebarOpen }) => {
     setPasswordSuccess('');
   };
 
-  const handleUpdatePassword = () => {
+  const handleUpdatePassword = async () => {
     setPasswordError('');
     setPasswordSuccess('');
+
+    // Client-side validation
     if (!oldPassword || !newPassword || !confirmPassword) {
       setPasswordError('All fields are required');
       return;
     }
-    if (newPassword.length < 8) {
-      setPasswordError('New password must be at least 8 characters');
+    if (newPassword.length < 6) {
+      setPasswordError('New password must be at least 6 characters');
       return;
     }
     if (newPassword !== confirmPassword) {
@@ -67,19 +114,56 @@ const Navbar = ({ toggleSidebar, sidebarOpen }) => {
       setPasswordError('New password cannot be the same as old password');
       return;
     }
-    setPasswordSuccess('Password updated successfully!');
-    setTimeout(() => {
-      handleCloseModal();
-    }, 2000);
+
+    // Call API to change password
+    try {
+      setIsPasswordLoading(true);
+      const response = await changePasswordAPI({
+        oldPassword,
+        newPassword,
+        confirmPassword,
+      });
+
+      if (response.success) {
+        setPasswordSuccess('Password updated successfully!');
+        setTimeout(() => {
+          handleCloseModal();
+        }, 2000);
+      } else {
+        setPasswordError(response.message || 'Failed to update password');
+      }
+    } catch (error) {
+      console.error('Error changing password:', error);
+      setPasswordError(error.message || 'Failed to update password');
+
+      // If unauthorized, redirect to login
+      if (error.message.includes('Unauthorized') || error.message.includes('token')) {
+        setTimeout(() => {
+          handleCloseModal();
+          removeToken();
+          navigate('/login');
+        }, 1500);
+      }
+    } finally {
+      setIsPasswordLoading(false);
+    }
   };
 
-  const handleLogout = () => {
-    // Remove token from localStorage
-    removeToken();
-    // Close dropdown
-    setProfileDropdownOpen(false);
-    // Navigate to login page
-    navigate('/login');
+  const handleLogout = async () => {
+    try {
+      // Call API to logout (clear token on server)
+      await logoutAPI();
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Continue with logout even if API call fails
+    } finally {
+      // Remove token from localStorage
+      removeToken();
+      // Close dropdown
+      setProfileDropdownOpen(false);
+      // Navigate to login page
+      navigate('/login');
+    }
   };
 
   return (
@@ -91,30 +175,36 @@ const Navbar = ({ toggleSidebar, sidebarOpen }) => {
             <button className="navbar__toggle" onClick={toggleSidebar}>
               <HiOutlineMenu size={24} />
             </button>
-            <div className="navbar__search">
-              <FiSearch className="navbar__search-icon" size={18} />
-              <input
-                type="text"
-                placeholder="Search..."
-                className="navbar__search-input"
-              />
-            </div>
+
           </div>
 
           {/* Navbar Right */}
           <div className="navbar__right">
-            <button className="navbar__notification">
-              <FiBell size={22} />
-              <span className="navbar__badge">3</span>
-            </button>
+            
 
             {/* Profile Section */}
             <div className="navbar__profile" ref={dropdownRef}>
               <div className="navbar__profile-section" onClick={toggleProfileDropdown}>
-                <div className="navbar__avatar">JD</div>
+                {isLoadingProfile ? (
+                  <div className="navbar__avatar navbar__avatar--loading">
+                    <div className="spinner-small"></div>
+                  </div>
+                ) : gymOwnerData?.profileImage ? (
+                  <img
+                    src={gymOwnerData.profileImage}
+                    alt={gymOwnerData.ownerName || 'Profile'}
+                    className="navbar__avatar-image"
+                  />
+                ) : (
+                  <div className="navbar__avatar">
+                    {getInitials(gymOwnerData?.ownerName)}
+                  </div>
+                )}
                 <div className="navbar__info">
-                  <p className="navbar__name">John Doe</p>
-                  <p className="navbar__role">Administrator</p>
+                  <p className="navbar__name">
+                    {isLoadingProfile ? 'Loading...' : gymOwnerData?.ownerName || 'Gym Owner'}
+                  </p>
+                  <p className="navbar__role">Gym Owner</p>
                 </div>
                 <FiChevronDown
                   className={`navbar__chevron ${profileDropdownOpen ? 'navbar__chevron--active' : ''}`}
@@ -125,7 +215,11 @@ const Navbar = ({ toggleSidebar, sidebarOpen }) => {
               {/* Profile Dropdown */}
               {profileDropdownOpen && (
                 <div className="navbar__dropdown">
-                  <Link to="/dashboard/profile" className="navbar__dropdown-item">
+                  <Link
+                    to="/dashboard/profile"
+                    className="navbar__dropdown-item"
+                    onClick={() => setProfileDropdownOpen(false)}
+                  >
                     <FiUser size={18} />
                     <span>My Account</span>
                   </Link>
@@ -137,7 +231,7 @@ const Navbar = ({ toggleSidebar, sidebarOpen }) => {
                     <span>Change Password</span>
                   </button>
                   <div className="navbar__divider"></div>
-                  <button 
+                  <button
                     className="navbar__dropdown-item navbar__dropdown-item--logout"
                     onClick={handleLogout}
                   >
@@ -265,8 +359,16 @@ const Navbar = ({ toggleSidebar, sidebarOpen }) => {
               <button
                 className="modal__btn modal__btn--update"
                 onClick={handleUpdatePassword}
+                disabled={isPasswordLoading}
               >
-                Update Password
+                {isPasswordLoading ? (
+                  <>
+                    <span className="spinner"></span>
+                    Updating...
+                  </>
+                ) : (
+                  'Update Password'
+                )}
               </button>
             </div>
           </div>

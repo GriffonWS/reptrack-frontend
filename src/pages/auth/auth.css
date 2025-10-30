@@ -97,6 +97,24 @@
       font-size: 14px;
       text-align: center;
       font-weight: 500;
+      animation: slideDown 0.3s ease-out, fadeOut 0.5s ease-in 4.5s forwards;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes fadeOut {
+      to {
+        opacity: 0;
+      }
     }
 
     .form-group {
@@ -134,6 +152,25 @@
       box-shadow: 0 0 0 4px rgba(255, 107, 53, 0.08);
     }
 
+    .form-input.input-error {
+      border-color: #fc8181;
+      background-color: #fff5f5;
+    }
+
+    .form-input.input-error:focus {
+      border-color: #c53030;
+      box-shadow: 0 0 0 4px rgba(197, 48, 48, 0.1);
+    }
+
+    .validation-error {
+      display: block;
+      color: #c53030;
+      font-size: 12px;
+      margin-top: 6px;
+      font-weight: 500;
+      animation: slideDown 0.2s ease-out;
+    }
+
     .password-group {
       position: relative;
     }
@@ -156,6 +193,11 @@
 
     .password-toggle:hover {
       color: #222222;
+      transform: scale(1.1);
+    }
+
+    .password-toggle:active {
+      transform: scale(0.95);
     }
 
     .forgot-password {
@@ -209,6 +251,24 @@
       background: #d0d0d0;
       cursor: not-allowed;
       transform: none;
+    }
+
+    .submit-btn .spinner {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      margin-right: 8px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
     }
 
     .signup-link {

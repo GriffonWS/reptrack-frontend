@@ -38,7 +38,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
       <div className="sidebar__logo">
         <div className="sidebar__logo-content">
           <div className="sidebar__logo-icon">
-            <span className="sidebar__logo-text">GYM</span>
+           <img src={logos} alt="Logo" />
           </div>
         </div>
         <button className="sidebar__close" onClick={toggleSidebar}>

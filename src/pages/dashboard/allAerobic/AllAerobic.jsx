@@ -1,26 +1,52 @@
-import React, { useState } from 'react';
-import { AiOutlineSearch } from 'react-icons/ai';
-import { AiOutlinePlus } from 'react-icons/ai';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { AiOutlineSearch, AiOutlinePlus } from 'react-icons/ai';
+import { FiAlertCircle } from 'react-icons/fi';
 import './AllAerobic.css';
 import { Link } from 'react-router-dom';
+import { getEquipmentByCategory } from '../../../services/equipment/equipmentService';
+import { removeToken } from '../../../utils/token';
 
 const AllAerobic = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [aerobicEquipments, setAerobicEquipments] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
-  // Mock data
-  const aerobicEquipments = [
-    { id: 1, name: 'Recumbent Bike', quantity: 15, image: '🚴' },
-    { id: 2, name: 'Concept2 Rower', quantity: 14, image: '🚣' },
-    { id: 3, name: 'Stair Stepper', quantity: 13, image: '🪜' },
-    { id: 4, name: 'Assault Bike', quantity: 12, image: '🚲' },
-    { id: 5, name: 'Stationary Bike', quantity: 11, image: '🚴' },
-    { id: 6, name: 'Treadmill', quantity: 10, image: '🏃' },
-    { id: 7, name: 'Elliptical', quantity: 9, image: '🏋️' },
-    { id: 8, name: 'VersaClimber', quantity: 8, image: '🧗' },
-  ];
+  // Fetch Aerobic equipment on component mount
+  useEffect(() => {
+    fetchAerobicEquipment();
+  }, []);
+
+  const fetchAerobicEquipment = async () => {
+    try {
+      setIsLoading(true);
+      setError('');
+      const response = await getEquipmentByCategory('Aerobic');
+
+      if (response.success && response.data) {
+        setAerobicEquipments(response.data);
+      } else {
+        setError('Failed to load aerobic equipment');
+      }
+    } catch (err) {
+      console.error('Error fetching aerobic equipment:', err);
+      setError(err.message || 'Failed to load aerobic equipment');
+
+      // If unauthorized, redirect to login
+      if (err.message.includes('Unauthorized') || err.message.includes('token')) {
+        removeToken();
+        navigate('/login');
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const filteredEquipments = aerobicEquipments.filter(equipment =>
-    equipment.name.toLowerCase().includes(searchTerm.toLowerCase())
+    equipment.equipment_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    equipment.equipment_number.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -49,28 +75,63 @@ const AllAerobic = () => {
           </div>
         </div>
 
-        {/* Equipment Grid */}
-        <div className="aerobic__grid">
-          {filteredEquipments.length === 0 ? (
-            <div className="aerobic__no-data">
-              No equipment found matching your search
+        {/* Error Message */}
+        {error && (
+          <div className="aerobic__error-card">
+            <FiAlertCircle className="aerobic__error-icon" />
+            <div>
+              <p className="aerobic__error-title">Error Loading Aerobic Equipment</p>
+              <p className="aerobic__error-message">{error}</p>
+              <button
+                className="aerobic__error-retry"
+                onClick={fetchAerobicEquipment}
+              >
+                Retry
+              </button>
             </div>
-          ) : (
-            filteredEquipments.map((equipment) => (
-              <div key={equipment.id} className="aerobic__card">
-                <div className="aerobic__card-image">
-                  <div className="aerobic__image-placeholder">
-                    {equipment.image}
+          </div>
+        )}
+
+        {/* Loading State */}
+        {isLoading && (
+          <div className="aerobic__loading">
+            <div className="aerobic__loading-spinner"></div>
+            <p className="aerobic__loading-text">Loading aerobic equipment...</p>
+          </div>
+        )}
+
+        {/* Equipment Grid */}
+        {!isLoading && !error && (
+          <div className="aerobic__grid">
+            {filteredEquipments.length === 0 ? (
+              <div className="aerobic__no-data">
+                {searchTerm ? 'No equipment found matching your search' : 'No aerobic equipment found. Add some to get started!'}
+              </div>
+            ) : (
+              filteredEquipments.map((equipment) => (
+                <div key={equipment.id} className="aerobic__card">
+                  <div className="aerobic__card-image">
+                    {equipment.equipment_image ? (
+                      <img
+                        src={equipment.equipment_image}
+                        alt={equipment.equipment_name}
+                        className="aerobic__equipment-image"
+                      />
+                    ) : (
+                      <div className="aerobic__image-placeholder">
+                        🏋️
+                      </div>
+                    )}
+                  </div>
+                  <div className="aerobic__card-badge">{equipment.equipment_number}</div>
+                  <div className="aerobic__card-content">
+                    <h3 className="aerobic__card-name">{equipment.equipment_name}</h3>
                   </div>
                 </div>
-                <div className="aerobic__card-badge">{equipment.quantity}</div>
-                <div className="aerobic__card-content">
-                  <h3 className="aerobic__card-name">{equipment.name}</h3>
-                </div>
-              </div>
-            ))
-          )}
-        </div>
+              ))
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
