@@ -64,14 +64,6 @@ const AllUsers = () => {
     setCurrentPage(0); // Reset to first page
   };
 
-  if (isLoading) {
-    return (
-      <div className="users__container">
-        <Loader />
-      </div>
-    );
-  }
-
   return (
     <div className="users__container">
       <div className="users__wrapper">
@@ -115,7 +107,11 @@ const AllUsers = () => {
           </div>
         </div>
 
+        {/* Loading State */}
+        {isLoading && <Loader />}
+
         {/* Table Container */}
+        {!isLoading && (
         <div className="users__table-wrapper">
           {/* Desktop Table */}
           <div className="users__desktop-table">
@@ -233,9 +229,10 @@ const AllUsers = () => {
             )}
           </div>
         </div>
+        )}
 
         {/* Pagination */}
-        {totalPages > 1 && (
+        {!isLoading && totalPages > 1 && (
           <div className="users__pagination">
             <div className="users__pagination-info">
               Showing {(currentPage * itemsPerPage) + 1} to {Math.min((currentPage + 1) * itemsPerPage, totalUsers)} of {totalUsers} entries

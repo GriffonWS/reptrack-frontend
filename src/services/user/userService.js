@@ -1,4 +1,4 @@
-import { getToken } from '../../utils/token';
+import { getToken, removeToken } from '../../utils/token';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -21,6 +21,11 @@ export const getAllUsers = async (page = 0, size = 10) => {
     const data = await response.json();
 
     if (!response.ok) {
+      if (response.status === 401) {
+        removeToken();
+        window.location.href = '/login';
+        throw new Error('Session expired. Please login again.');
+      }
       throw new Error(data.message || 'Failed to fetch users');
     }
 
@@ -49,6 +54,11 @@ export const getUserDetails = async (userId) => {
     const data = await response.json();
 
     if (!response.ok) {
+      if (response.status === 401) {
+        removeToken();
+        window.location.href = '/login';
+        throw new Error('Session expired. Please login again.');
+      }
       throw new Error(data.message || 'Failed to fetch user details');
     }
 
@@ -77,6 +87,11 @@ export const deleteUser = async (userId) => {
     const data = await response.json();
 
     if (!response.ok) {
+      if (response.status === 401) {
+        removeToken();
+        window.location.href = '/login';
+        throw new Error('Session expired. Please login again.');
+      }
       throw new Error(data.message || 'Failed to delete user');
     }
 
@@ -106,6 +121,11 @@ export const registerUser = async (userData) => {
     const data = await response.json();
 
     if (!response.ok) {
+      if (response.status === 401) {
+        removeToken();
+        window.location.href = '/login';
+        throw new Error('Session expired. Please login again.');
+      }
       throw new Error(data.message || 'Failed to register user');
     }
 
@@ -135,6 +155,11 @@ export const updateUser = async (userId, userData) => {
     const data = await response.json();
 
     if (!response.ok) {
+      if (response.status === 401) {
+        removeToken();
+        window.location.href = '/login';
+        throw new Error('Session expired. Please login again.');
+      }
       throw new Error(data.message || 'Failed to update user');
     }
 

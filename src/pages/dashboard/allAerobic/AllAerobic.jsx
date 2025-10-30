@@ -6,6 +6,7 @@ import './AllAerobic.css';
 import { Link } from 'react-router-dom';
 import { getEquipmentByCategory } from '../../../services/equipment/equipmentService';
 import { removeToken } from '../../../utils/token';
+import Loader from '../../../components/Loader/Loader';
 
 const AllAerobic = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -93,12 +94,7 @@ const AllAerobic = () => {
         )}
 
         {/* Loading State */}
-        {isLoading && (
-          <div className="aerobic__loading">
-            <div className="aerobic__loading-spinner"></div>
-            <p className="aerobic__loading-text">Loading aerobic equipment...</p>
-          </div>
-        )}
+        {isLoading && <Loader />}
 
         {/* Equipment Grid */}
         {!isLoading && !error && (

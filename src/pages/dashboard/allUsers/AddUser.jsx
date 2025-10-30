@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { FiUpload } from 'react-icons/fi';
+import { FiArrowLeft, FiUpload } from 'react-icons/fi';
 import toast, { Toaster } from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { registerUser } from '../../../services/user/userService';
 import './AddUser.css';
 
@@ -181,10 +181,16 @@ const AddUser = () => {
 
   return (
     <div className="adduser__container">
+      
       <Toaster position="top-right" />
       <div className="adduser__wrapper">
+        
         {/* Header */}
         <div className="adduser__header">
+            <Link to="/dashboard/all_users" className="addaero__back-btn">
+        <FiArrowLeft size={20} />
+        Back
+      </Link>
           <h1 className="adduser__title">Add New Member</h1>
           <p className="adduser__subtitle">Fill in the details to register a new member</p>
         </div>

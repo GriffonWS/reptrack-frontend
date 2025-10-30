@@ -1,4 +1,4 @@
-import { getToken } from '../../utils/token';
+import { getToken, removeToken } from '../../utils/token';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -26,7 +26,9 @@ export const getGymOwnerByToken = async () => {
 
     if (!response.ok) {
       if (response.status === 401) {
-        throw new Error('Unauthorized. Please login again.');
+        removeToken();
+        window.location.href = '/login';
+        throw new Error('Session expired. Please login again.');
       } else if (response.status === 404) {
         throw new Error('Gym owner not found.');
       } else {
@@ -76,7 +78,9 @@ export const updateGymOwner = async (formData) => {
 
     if (!response.ok) {
       if (response.status === 401) {
-        throw new Error('Unauthorized. Please login again.');
+        removeToken();
+        window.location.href = '/login';
+        throw new Error('Session expired. Please login again.');
       } else if (response.status === 404) {
         throw new Error('Gym owner not found.');
       } else {
@@ -172,7 +176,9 @@ export const logout = async () => {
 
     if (!response.ok) {
       if (response.status === 401) {
-        throw new Error('Unauthorized. Please login again.');
+        removeToken();
+        window.location.href = '/login';
+        throw new Error('Session expired. Please login again.');
       } else if (response.status === 404) {
         throw new Error('Gym owner not found.');
       } else {

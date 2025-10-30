@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { FiSearch, FiMail, FiCalendar, FiX, FiAlertCircle } from 'react-icons/fi';
 import { getAllSupportQueries } from '../../../services/support/supportService';
 import { removeToken } from '../../../utils/token';
+import Loader from '../../../components/Loader/Loader';
 import './Support.css';
 
 const Support = () => {
@@ -106,12 +107,7 @@ const Support = () => {
         )}
 
         {/* Loading State */}
-        {isLoading && (
-          <div className="support__loading">
-            <div className="support__loading-spinner"></div>
-            <p className="support__loading-text">Loading support queries...</p>
-          </div>
-        )}
+        {isLoading && <Loader />}
 
         {/* Results Grid */}
         {!isLoading && !error && (

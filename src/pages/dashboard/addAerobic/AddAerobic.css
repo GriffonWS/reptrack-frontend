@@ -1,246 +1,371 @@
 :root {
-          --primary: #f26722;
-          --secondary: #333333;
-          --bg-light: #f8fafc;
-          --card-bg: #ffffff;
-          --text-dark: #1e293b;
-          --text-muted: #64748b;
-          --border: #e2e8f0;
-          --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+  --primary: #f26722;
+  --secondary: #333333;
+  --bg-light: #f8fafc;
+  --card-bg: #ffffff;
+  --text-dark: #1e293b;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-        .addaero__container {
-          min-height: calc(100vh - 70px);
-          background-color: var(--bg-light);
-          padding: 2rem;
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
-          -webkit-font-smoothing: antialiased;
-          -moz-osx-font-smoothing: grayscale;
-        }
+/* ==================== MAIN WRAPPER ==================== */
+.addaero__wrapper {
+  min-height: calc(100vh - 70px);
+  background-color: var(--bg-light);
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 
-        .addaero__wrapper {
-          max-width: 900px;
-          margin: 0 auto;
-        }
+/* ==================== BACK BUTTON ==================== */
+.addaero__back-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: var(--primary);
+  font-weight: 600;
+  cursor: pointer;
+  padding: 1.5rem 2rem 0 2rem;
+  font-size: 0.9375rem;
+  transition: var(--transition);
+  text-decoration: none;
+}
 
-        /* ==================== HEADER ==================== */
-        .addaero__header {
-          margin-bottom: 2rem;
-          animation: fadeIn 0.5s ease;
-        }
+.addaero__back-btn:hover {
+  color: #e55a24;
+  gap: 0.75rem;
+}
 
-        .addaero__title {
-          font-size: 2rem;
-          font-weight: 700;
-          color: var(--text-dark);
-          margin: 0;
-          letter-spacing: -0.5px;
-        }
+/* ==================== CONTAINER ==================== */
+.addaero__container {
+  max-width: 1200px;
+  margin: 1.5rem auto;
+  background-color: var(--card-bg);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  animation: fadeInUp 0.5s ease;
+}
 
-        /* ==================== FORM CONTAINER ==================== */
-        .addaero__form-container {
-          background-color: var(--card-bg);
-          border-radius: 12px;
-          border: 1px solid var(--border);
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-          padding: 2rem;
-          animation: fadeInUp 0.5s ease;
-        }
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
+/* ==================== HEADER ==================== */
+.addaero__header {
+  padding: 2rem;
+  border-bottom: 1px solid var(--border);
+}
 
-        @keyframes fadeInUp {
-          from {
-            opacity: 0;
-            transform: translateY(12px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
+.addaero__title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.5px;
+}
 
-        /* ==================== FORM GRID ==================== */
-        .addaero__form-grid {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 1.5rem;
-          margin-bottom: 2rem;
-        }
+.addaero__subtitle {
+  font-size: 0.9375rem;
+  color: var(--text-muted);
+  margin: 0;
+  font-weight: 500;
+}
 
-        .addaero__form-group {
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
-        }
+/* ==================== ERROR MESSAGE ==================== */
+.addaero__error {
+  margin: 1.5rem 2rem;
+  padding: 1rem 1.5rem;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  color: #dc2626;
+  font-size: 0.9375rem;
+}
 
-        /* ==================== LABELS ==================== */
-        .addaero__label {
-          font-size: 0.875rem;
-          font-weight: 600;
-          color: var(--text-dark);
-        }
+/* ==================== SUCCESS MESSAGE ==================== */
+.addaero__success {
+  margin: 1.5rem 2rem;
+  padding: 1rem 1.5rem;
+  background-color: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 8px;
+  color: #15803d;
+  font-size: 0.9375rem;
+}
 
-        .addaero__upload-label {
-          font-size: 0.875rem;
-          font-weight: 600;
-          color: var(--text-dark);
-          display: block;
-          margin-bottom: 0.75rem;
-        }
+/* ==================== FORM WRAPPER ==================== */
+.addaero__form-wrapper {
+  padding: 2rem;
+}
 
-        /* ==================== INPUT ==================== */
-        .addaero__input {
-          padding: 0.75rem 1rem;
-          border: 1.5px solid var(--border);
-          border-radius: 8px;
-          font-size: 0.9375rem;
-          font-family: inherit;
-          outline: none;
-          transition: var(--transition);
-          background-color: var(--bg-light);
-        }
+/* ==================== IMAGE SECTION ==================== */
+.addaero__image-section {
+  margin-bottom: 2.5rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+}
 
-        .addaero__input:focus {
-          border-color: var(--primary);
-          background-color: white;
-          box-shadow: 0 0 0 3px rgba(242, 103, 34, 0.1);
-        }
+.addaero__image-group {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
 
-        .addaero__input::placeholder {
-          color: var(--text-muted);
-        }
+.addaero__avatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--primary), #e55a24);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 3px solid var(--border);
+  box-shadow: 0 4px 12px rgba(242, 103, 34, 0.2);
+}
 
-        /* ==================== UPLOAD SECTION ==================== */
-        .addaero__upload-section {
-          margin-bottom: 2rem;
-          padding-bottom: 2rem;
-          border-bottom: 1px solid var(--border);
-        }
+.addaero__avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
-        .addaero__file-input {
-          display: none;
-        }
+.addaero__file-input {
+  display: none;
+}
 
-        .addaero__file-input-wrapper {
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-        }
+.addaero__upload-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, var(--primary), #e55a24);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 2px 8px rgba(242, 103, 34, 0.2);
+  border: none;
+  font-family: inherit;
+}
 
-        .addaero__file-btn {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 0.5rem;
-          padding: 0.75rem 1.5rem;
-          background-color: var(--bg-light);
-          border: 1.5px solid var(--border);
-          border-radius: 8px;
-          cursor: pointer;
-          transition: var(--transition);
-          font-size: 0.9375rem;
-          font-weight: 600;
-          color: var(--text-muted);
-          white-space: nowrap;
-          flex-shrink: 0;
-        }
+.addaero__upload-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(242, 103, 34, 0.3);
+}
 
-        .addaero__file-btn:hover {
-          border-color: var(--primary);
-          color: var(--primary);
-          background-color: rgba(242, 103, 34, 0.02);
-        }
+.addaero__upload-hint {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin-top: 0.5rem;
+}
 
-        .addaero__file-name {
-          font-size: 0.875rem;
-          color: var(--text-muted);
-          flex: 1;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
+/* ==================== FORM GRID ==================== */
+.addaero__form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
 
-        /* ==================== SUBMIT SECTION ==================== */
-        .addaero__submit-section {
-          display: flex;
-          justify-content: center;
-        }
+.addaero__form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
 
-        .addaero__submit-btn {
-          padding: 0.875rem 3rem;
-          background: linear-gradient(135deg, var(--primary), #e55a24);
-          color: white;
-          border: none;
-          border-radius: 8px;
-          font-size: 0.9375rem;
-          font-weight: 600;
-          cursor: pointer;
-          transition: var(--transition);
-          box-shadow: 0 2px 8px rgba(242, 103, 34, 0.2);
-          font-family: inherit;
-          min-width: 150px;
-        }
+.addaero__form-group--fullwidth {
+  grid-column: 1 / -1;
+}
 
-        .addaero__submit-btn:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 4px 16px rgba(242, 103, 34, 0.3);
-        }
+/* ==================== LABELS & INPUTS ==================== */
+.addaero__label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-dark);
+}
 
-        /* ==================== RESPONSIVE ==================== */
-        @media (max-width: 768px) {
-          .addaero__container {
-            padding: 1.5rem;
-          }
+.addaero__input {
+  padding: 0.75rem 1rem;
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  outline: none;
+  transition: var(--transition);
+  background-color: var(--bg-light);
+}
 
-          .addaero__title {
-            font-size: 1.5rem;
-          }
+.addaero__input:focus {
+  border-color: var(--primary);
+  background-color: white;
+  box-shadow: 0 0 0 3px rgba(242, 103, 34, 0.1);
+}
 
-          .addaero__form-container {
-            padding: 1.5rem;
-          }
+.addaero__input::placeholder {
+  color: var(--text-muted);
+}
 
-          .addaero__form-grid {
-            grid-template-columns: 1fr;
-            gap: 1.25rem;
-          }
+select.addaero__input {
+  cursor: pointer;
+}
 
-          .addaero__file-input-wrapper {
-            flex-direction: column;
-            align-items: stretch;
-            gap: 0.75rem;
-          }
+/* ==================== ACTIONS ==================== */
+.addaero__actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border);
+}
 
-          .addaero__file-btn {
-            width: 100%;
-            justify-content: center;
-          }
+.addaero__btn {
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: inherit;
+}
 
-          .addaero__file-name {
-            width: 100%;
-            text-align: center;
-          }
-        }
+.addaero__btn--save {
+  background: linear-gradient(135deg, var(--primary), #e55a24);
+  color: white;
+  box-shadow: 0 2px 8px rgba(242, 103, 34, 0.2);
+}
 
-        @media (max-width: 480px) {
-          .addaero__container {
-            padding: 1rem;
-          }
+.addaero__btn--save:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(242, 103, 34, 0.3);
+}
 
-          .addaero__title {
-            font-size: 1.25rem;
-          }
+.addaero__btn--save:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
-          .addaero__form-container {
-            padding: 1.25rem;
-          }
+.addaero__btn--cancel {
+  background-color: transparent;
+  color: var(--text-dark);
+  border: 1.5px solid var(--border);
+}
 
-          .addaero__submit-btn {
-            width: 100%;
-            min-width: auto;
-          }
-        }
+.addaero__btn--cancel:hover {
+  border-color: var(--primary);
+  background-color: var(--bg-light);
+  color: var(--primary);
+}
+
+/* ==================== RESPONSIVE DESIGN ==================== */
+@media (max-width: 1024px) {
+  .addaero__form-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .addaero__container {
+    margin: 1rem;
+    border-radius: 10px;
+  }
+
+  .addaero__header {
+    padding: 1.5rem;
+  }
+
+  .addaero__form-wrapper {
+    padding: 1.5rem;
+  }
+
+  .addaero__back-btn {
+    padding: 1rem 1rem 0 1rem;
+  }
+
+  .addaero__title {
+    font-size: 1.5rem;
+  }
+
+  .addaero__image-section {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+  }
+
+  .addaero__image-group {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .addaero__form-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .addaero__actions {
+    flex-direction: column;
+  }
+
+  .addaero__btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .addaero__container {
+    margin: 0.75rem;
+  }
+
+  .addaero__header {
+    padding: 1.25rem;
+  }
+
+  .addaero__form-wrapper {
+    padding: 1.25rem;
+  }
+
+  .addaero__back-btn {
+    padding: 1rem 0.75rem 0 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  .addaero__title {
+    font-size: 1.25rem;
+  }
+
+  .addaero__avatar {
+    width: 100px;
+    height: 100px;
+  }
+
+  .addaero__upload-btn {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+  }
+
+  .addaero__input {
+    font-size: 0.875rem;
+  }
+
+  .addaero__btn {
+    padding: 0.625rem 1.5rem;
+    font-size: 0.875rem;
+  }
+}

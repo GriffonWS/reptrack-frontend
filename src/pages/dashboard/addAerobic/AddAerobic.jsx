@@ -1,190 +1,191 @@
-
-import React, { useState } from 'react';
-import { FiUpload } from 'react-icons/fi';
-import { useNavigate } from 'react-router-dom';
-import './AddAerobic.css';
+import { useState } from 'react';
+import { FiUpload, FiArrowLeft, FiImage } from 'react-icons/fi';
+import { Link, useNavigate } from 'react-router-dom';
 import { createEquipment } from '../../../services/equipment/equipmentService';
+import './AddAerobic.css';
 
 const AddAerobic = () => {
   const navigate = useNavigate();
-
   const [formData, setFormData] = useState({
-    equipmentName: '',
-    serialNumber: ''
+    equipment_name: '',
+    equipment_number: '',
+    category: 'Aerobic'
   });
 
   const [equipmentImage, setEquipmentImage] = useState(null);
-  const [fileName, setFileName] = useState('No file chosen');
-  const [loading, setLoading] = useState(false);
+  const [imagePreview, setImagePreview] = useState('');
+  const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    // Clear error when user types
-    if (error) setError('');
   };
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        setError('Image size must be less than 5MB');
-        return;
-      }
-
-      // Validate file type
-      if (!file.type.startsWith('image/')) {
-        setError('Please upload a valid image file');
-        return;
-      }
-
+      console.log('✅ Image selected:', file.name, file.type, file.size, 'bytes');
       setEquipmentImage(file);
-      setFileName(file.name);
-      setError('');
+      setImagePreview(URL.createObjectURL(file));
+    } else {
+      console.warn('⚠️ No file selected from input');
     }
-  };
-
-  const validateForm = () => {
-    if (!formData.equipmentName.trim()) {
-      setError('Equipment name is required');
-      return false;
-    }
-
-    if (!formData.serialNumber.trim()) {
-      setError('Serial number is required');
-      return false;
-    }
-
-    if (!equipmentImage) {
-      setError('Equipment image is required');
-      return false;
-    }
-
-    return true;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Clear previous messages
+    setSaving(true);
     setError('');
     setSuccess('');
 
-    // Validate form
-    if (!validateForm()) {
-      return;
-    }
-
     try {
-      setLoading(true);
-
-      // Create FormData
+      // Create FormData object
       const formDataToSend = new FormData();
-      formDataToSend.append('equipment_name', formData.equipmentName);
-      formDataToSend.append('equipment_number', formData.serialNumber);
-      formDataToSend.append('equipment_category', 'Aerobic');
-      formDataToSend.append('equipment_image', equipmentImage);
+      formDataToSend.append('equipment_name', formData.equipment_name);
+      formDataToSend.append('equipment_number', formData.equipment_number);
+      formDataToSend.append('category', formData.category);
 
-      // Send to backend
+      // Append image if selected
+      if (equipmentImage) {
+        console.log('📸 Appending image:', equipmentImage.name, equipmentImage.size, 'bytes');
+        formDataToSend.append('equipment_image', equipmentImage);
+      } else {
+        console.warn('⚠️ No image selected');
+      }
+
+      // Debug: Log FormData contents
+      console.log('📦 FormData contents:');
+      for (let pair of formDataToSend.entries()) {
+        console.log(pair[0], ':', pair[1]);
+      }
+
       const response = await createEquipment(formDataToSend);
 
       if (response.success) {
         setSuccess('Aerobic equipment added successfully!');
-
-        // Reset form
-        setFormData({
-          equipmentName: '',
-          serialNumber: ''
-        });
-        setEquipmentImage(null);
-        setFileName('No file chosen');
-
-        // Redirect to all aerobic page after 2 seconds
         setTimeout(() => {
-          navigate('/dashboard/all_aerobic');
+          navigate('/dashboard/aerobic');
         }, 2000);
-      } else {
-        setError(response.message || 'Failed to add equipment');
       }
     } catch (err) {
-      setError(err.message || 'Failed to add equipment. Please try again.');
+      setError(err.message || 'Failed to add equipment');
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
+  const handleCancel = () => {
+    navigate(-1);
+  };
+
   return (
-    <div className="addaero__container">
-      <div className="addaero__wrapper">
-        {/* Header */}
+    <div className="addaero__wrapper">
+      {/* Back Button */}
+      <Link to="/dashboard/aerobic" className="addaero__back-btn">
+        <FiArrowLeft size={20} />
+        Back
+      </Link>
+
+      {/* Form Container */}
+      <div className="addaero__container">
         <div className="addaero__header">
           <h1 className="addaero__title">Add New Aerobic Equipment</h1>
+          <p className="addaero__subtitle">Add aerobic equipment to your gym inventory</p>
         </div>
 
-        {/* Form Container */}
-        <div className="addaero__form-container">
+        {error && (
+          <div className="addaero__error">
+            {error}
+          </div>
+        )}
+
+        {success && (
+          <div className="addaero__success">
+            {success}
+          </div>
+        )}
+
+        <form className="addaero__form-wrapper" onSubmit={handleSubmit}>
+          {/* Image Section */}
+          <div className="addaero__image-section">
+            <div className="addaero__image-group">
+              <div className="addaero__avatar">
+                {imagePreview ? (
+                  <img src={imagePreview} alt="Equipment Preview" />
+                ) : (
+                  <FiImage size={48} />
+                )}
+              </div>
+              <div>
+                <label className="addaero__upload-btn">
+                  <FiUpload size={18} />
+                  Upload Equipment Image
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="addaero__file-input"
+                  />
+                </label>
+                <p className="addaero__upload-hint">JPG, PNG up to 5MB</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Form Grid */}
           <div className="addaero__form-grid">
             {/* Equipment Name */}
             <div className="addaero__form-group">
-              <label className="addaero__label">Equipment Name</label>
+              <label className="addaero__label">Equipment Name *</label>
               <input
                 type="text"
-                name="equipmentName"
-                placeholder="Enter Equipment name"
-                value={formData.equipmentName}
+                name="equipment_name"
+                value={formData.equipment_name}
                 onChange={handleChange}
                 className="addaero__input"
+                placeholder="Enter equipment name"
+                required
               />
             </div>
 
-            {/* Serial Number */}
+            {/* Equipment Number */}
             <div className="addaero__form-group">
-              <label className="addaero__label">Equipment Serial Number</label>
+              <label className="addaero__label">Equipment Number *</label>
               <input
                 type="text"
-                name="serialNumber"
-                placeholder="Enter Equipment Serial Number"
-                value={formData.serialNumber}
+                name="equipment_number"
+                value={formData.equipment_number}
                 onChange={handleChange}
                 className="addaero__input"
+                placeholder="Enter equipment number"
+                required
               />
             </div>
           </div>
 
-          {/* Image Upload */}
-          <div className="addaero__upload-section">
-            <label className="addaero__upload-label">Upload Equipment Image</label>
-            <div className="addaero__file-input-wrapper">
-              <label className="addaero__file-btn">
-                <FiUpload size={16} />
-                <span>Choose File</span>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="addaero__file-input"
-                />
-              </label>
-              <span className="addaero__file-name">{fileName}</span>
-            </div>
-          </div>
-
-          {/* Submit Button */}
-          <div className="addaero__submit-section">
+          {/* Action Buttons */}
+          <div className="addaero__actions">
             <button
               type="button"
-              onClick={handleSubmit}
-              className="addaero__submit-btn"
+              onClick={handleCancel}
+              className="addaero__btn addaero__btn--cancel"
             >
-              Submit
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={saving}
+              className="addaero__btn addaero__btn--save"
+            >
+              {saving ? 'Adding...' : 'Add Equipment'}
             </button>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );
 };
+
 export default AddAerobic;

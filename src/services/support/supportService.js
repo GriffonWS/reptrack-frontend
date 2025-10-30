@@ -1,4 +1,4 @@
-import { getToken } from '../../utils/token';
+import { getToken, removeToken } from '../../utils/token';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -26,7 +26,9 @@ export const getAllSupportQueries = async () => {
 
     if (!response.ok) {
       if (response.status === 401) {
-        throw new Error('Unauthorized. Please login again.');
+        removeToken();
+        window.location.href = '/login';
+        throw new Error('Session expired. Please login again.');
       } else if (response.status === 404) {
         throw new Error('Support queries not found.');
       } else {
@@ -80,7 +82,9 @@ export const getSupportQueriesBySenderId = async (senderId) => {
 
     if (!response.ok) {
       if (response.status === 401) {
-        throw new Error('Unauthorized. Please login again.');
+        removeToken();
+        window.location.href = '/login';
+        throw new Error('Session expired. Please login again.');
       } else if (response.status === 404) {
         throw new Error('No support queries found for this sender.');
       } else {

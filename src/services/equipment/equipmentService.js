@@ -1,4 +1,4 @@
-import { getToken } from '../../utils/token';
+import { getToken, removeToken } from '../../utils/token';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -26,7 +26,9 @@ export const getAllEquipments = async () => {
 
     if (!response.ok) {
       if (response.status === 401) {
-        throw new Error('Unauthorized. Please login again.');
+        removeToken();
+        window.location.href = '/login';
+        throw new Error('Session expired. Please login again.');
       }
       throw new Error(data.message || 'Failed to fetch equipments');
     }
@@ -73,7 +75,9 @@ export const getEquipmentByCategory = async (category) => {
 
     if (!response.ok) {
       if (response.status === 401) {
-        throw new Error('Unauthorized. Please login again.');
+        removeToken();
+        window.location.href = '/login';
+        throw new Error('Session expired. Please login again.');
       } else if (response.status === 400) {
         throw new Error(data.message || 'Invalid category');
       }
@@ -118,7 +122,9 @@ export const getEquipmentById = async (id) => {
 
     if (!response.ok) {
       if (response.status === 401) {
-        throw new Error('Unauthorized. Please login again.');
+        removeToken();
+        window.location.href = '/login';
+        throw new Error('Session expired. Please login again.');
       } else if (response.status === 404) {
         throw new Error('Equipment not found.');
       }
@@ -257,7 +263,9 @@ export const deleteEquipment = async (id) => {
 
     if (!response.ok) {
       if (response.status === 401) {
-        throw new Error('Unauthorized. Please login again.');
+        removeToken();
+        window.location.href = '/login';
+        throw new Error('Session expired. Please login again.');
       } else if (response.status === 404) {
         throw new Error('Equipment not found.');
       }

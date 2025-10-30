@@ -4,6 +4,7 @@ import { MdError } from 'react-icons/md';
 import './AllEquipments.css';
 import { Link } from 'react-router-dom';
 import { getEquipmentByCategory } from '../../../services/equipment/equipmentService';
+import Loader from '../../../components/Loader/Loader';
 
 const AllEquipments = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -38,43 +39,6 @@ const AllEquipments = () => {
     equipment.equipment_number.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Loading state
-  if (loading) {
-    return (
-      <div className="equipment__container">
-        <div className="equipment__wrapper">
-          <div className="equipment__loading">
-            <div className="equipment__loading-spinner"></div>
-            <p className="equipment__loading-text">Loading exercise equipment...</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Error state
-  if (error) {
-    return (
-      <div className="equipment__container">
-        <div className="equipment__wrapper">
-          <div className="equipment__error-card">
-            <MdError className="equipment__error-icon" />
-            <div>
-              <h3 className="equipment__error-title">Error Loading Equipment</h3>
-              <p className="equipment__error-message">{error}</p>
-              <button
-                onClick={fetchExerciseEquipment}
-                className="equipment__error-retry"
-              >
-                Try Again
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="equipment__container">
       <div className="equipment__wrapper">
@@ -101,38 +65,60 @@ const AllEquipments = () => {
           </div>
         </div>
 
-        {/* Equipment Grid */}
-        <div className="equipment__grid">
-          {filteredEquipments.length === 0 ? (
-            <div className="equipment__no-data">
-              {exerciseEquipments.length === 0
-                ? 'No exercise equipment available'
-                : 'No equipment found matching your search'}
+        {/* Error State */}
+        {error && (
+          <div className="equipment__error-card">
+            <MdError className="equipment__error-icon" />
+            <div>
+              <h3 className="equipment__error-title">Error Loading Equipment</h3>
+              <p className="equipment__error-message">{error}</p>
+              <button
+                onClick={fetchExerciseEquipment}
+                className="equipment__error-retry"
+              >
+                Try Again
+              </button>
             </div>
-          ) : (
-            filteredEquipments.map((equipment) => (
-              <div key={equipment.id} className="equipment__card">
-                <div className="equipment__card-image">
-                  {equipment.equipment_image ? (
-                    <img
-                      src={equipment.equipment_image}
-                      alt={equipment.equipment_name}
-                      className="equipment__equipment-image"
-                    />
-                  ) : (
-                    <div className="equipment__image-placeholder">
-                      🏋️
-                    </div>
-                  )}
-                </div>
-                <div className="equipment__card-badge">{equipment.equipment_number || '0'}</div>
-                <div className="equipment__card-content">
-                  <h3 className="equipment__card-name">{equipment.equipment_name}</h3>
-                </div>
+          </div>
+        )}
+
+        {/* Loading State */}
+        {loading && <Loader />}
+
+        {/* Equipment Grid */}
+        {!loading && !error && (
+          <div className="equipment__grid">
+            {filteredEquipments.length === 0 ? (
+              <div className="equipment__no-data">
+                {exerciseEquipments.length === 0
+                  ? 'No exercise equipment available'
+                  : 'No equipment found matching your search'}
               </div>
-            ))
-          )}
-        </div>
+            ) : (
+              filteredEquipments.map((equipment) => (
+                <div key={equipment.id} className="equipment__card">
+                  <div className="equipment__card-image">
+                    {equipment.equipment_image ? (
+                      <img
+                        src={equipment.equipment_image}
+                        alt={equipment.equipment_name}
+                        className="equipment__equipment-image"
+                      />
+                    ) : (
+                      <div className="equipment__image-placeholder">
+                        🏋️
+                      </div>
+                    )}
+                  </div>
+                  <div className="equipment__card-badge">{equipment.equipment_number || '0'}</div>
+                  <div className="equipment__card-content">
+                    <h3 className="equipment__card-name">{equipment.equipment_name}</h3>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
