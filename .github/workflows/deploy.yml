@@ -22,9 +22,28 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd /home/ubuntu/reptrack-frontend
+
+            # Stash any local changes (like .env modifications)
+            git stash
+
+            # Pull latest code
             git pull origin main
+
+            # Restore stashed .env if it exists
+            git stash pop || true
+
+            # Install dependencies
             npm install
+
+            # Build frontend
             npm run build
+
+            # Test and reload nginx
             sudo nginx -t && sudo systemctl reload nginx
+
             echo "✅ Frontend deployment completed!"
+            echo "📊 Latest commit:"
+            git log -1 --oneline
+
+            echo "📊 Nginx status:"
             sudo systemctl status nginx --no-pager -l
