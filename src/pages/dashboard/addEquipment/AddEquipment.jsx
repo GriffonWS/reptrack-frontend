@@ -88,7 +88,7 @@ const AddEquipment = () => {
   return (
     <div className="addequip__wrapper">
       {/* Back Button */}
-      <Link to="/dashboard/equipments" className="addequip__back-btn">
+      <Link to="/dashboard/all_equipments" className="addequip__back-btn">
         <FiArrowLeft size={20} />
         Back
       </Link>

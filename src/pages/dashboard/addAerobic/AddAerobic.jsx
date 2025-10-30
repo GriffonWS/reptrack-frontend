@@ -83,7 +83,7 @@ const AddAerobic = () => {
   return (
     <div className="addaero__wrapper">
       {/* Back Button */}
-      <Link to="/dashboard/aerobic" className="addaero__back-btn">
+      <Link to="/dashboard/all_aerobic" className="addaero__back-btn">
         <FiArrowLeft size={20} />
         Back
       </Link>

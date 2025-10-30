@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import '../pages/dashboard/Dashboard.css';
 import logos from '../assets/logo-H.png';
@@ -22,6 +22,13 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     }));
   };
 
+  // Close sidebar on route change (mobile only)
+  useEffect(() => {
+    if (isOpen && window.innerWidth <= 768) {
+      toggleSidebar();
+    }
+  }, [location.pathname]);
+
   // Helper function to check if a link is active
   const isLinkActive = (path) => {
     return location.pathname === path;
@@ -33,7 +40,16 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   };
 
   return (
-    <aside className={`sidebar ${isOpen ? 'sidebar--open' : 'sidebar--closed'}`}>
+    <>
+      {/* Overlay for mobile - click to close sidebar */}
+      {isOpen && (
+        <div
+          className="sidebar__overlay"
+          onClick={toggleSidebar}
+        />
+      )}
+
+      <aside className={`sidebar ${isOpen ? 'sidebar--open' : 'sidebar--closed'}`}>
       {/* Logo Section */}
       <div className="sidebar__logo">
         <div className="sidebar__logo-content">
@@ -153,6 +169,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
         </ul>
       </nav>
     </aside>
+    </>
   );
 };
 

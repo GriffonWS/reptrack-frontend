@@ -9,23 +9,50 @@
           --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .adduser__container {
+        /* ==================== MAIN WRAPPER ==================== */
+        .adduser__wrapper {
           min-height: calc(100vh - 70px);
           background-color: var(--bg-light);
+          padding: 0;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
         }
 
-        .adduser__wrapper {
+        /* ==================== BACK BUTTON ==================== */
+        .adduser__back-btn {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          background: none;
+          border: none;
+          color: var(--primary);
+          font-weight: 600;
+          cursor: pointer;
+          padding: 1.5rem 2rem 0 2rem;
+          font-size: 0.9375rem;
+          transition: var(--transition);
+          text-decoration: none;
+        }
+
+        .adduser__back-btn:hover {
+          color: #e55a24;
+          gap: 0.75rem;
+        }
+
+        /* ==================== CONTAINER ==================== */
+        .adduser__container {
           max-width: 1200px;
-          margin: 0 auto;
+          margin: 1.5rem auto;
+          background-color: var(--card-bg);
+          border-radius: 12px;
+          border: 1px solid var(--border);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
 
         /* ==================== HEADER ==================== */
         .adduser__header {
-          margin-bottom: 2rem;
-          animation: fadeIn 0.5s ease;
+          padding: 2rem 2rem 0 2rem;
         }
 
         .adduser__title {
@@ -45,12 +72,7 @@
 
         /* ==================== FORM CONTAINER ==================== */
         .adduser__form-container {
-          background-color: var(--card-bg);
-          border-radius: 12px;
-          border: 1px solid var(--border);
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
           padding: 2rem;
-          animation: fadeInUp 0.5s ease;
         }
 
         @keyframes fadeIn {

@@ -161,7 +161,7 @@ const AddUser = () => {
         healthInfo: formData.healthInfo.trim() || 'No major health issues'
       };
 
-      const response = await registerUser(userData);
+      const response = await registerUser(userData, profileImage);
 
       if (response.success) {
         toast.success('Member added successfully!');
@@ -180,17 +180,18 @@ const AddUser = () => {
   };
 
   return (
-    <div className="adduser__container">
-      
+    <div className="adduser__wrapper">
       <Toaster position="top-right" />
-      <div className="adduser__wrapper">
-        
-        {/* Header */}
-        <div className="adduser__header">
-            <Link to="/dashboard/all_users" className="addaero__back-btn">
+
+      {/* Back Button */}
+      <Link to="/dashboard/all_users" className="adduser__back-btn">
         <FiArrowLeft size={20} />
         Back
       </Link>
+
+      {/* Form Container */}
+      <div className="adduser__container">
+        <div className="adduser__header">
           <h1 className="adduser__title">Add New Member</h1>
           <p className="adduser__subtitle">Fill in the details to register a new member</p>
         </div>

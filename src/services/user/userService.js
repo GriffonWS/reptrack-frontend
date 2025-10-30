@@ -101,7 +101,7 @@ export const deleteUser = async (userId) => {
   }
 };
 
-export const registerUser = async (userData) => {
+export const registerUser = async (userData, profileImage = null) => {
   try {
     const token = getToken();
 
@@ -109,13 +109,28 @@ export const registerUser = async (userData) => {
       throw new Error('No authentication token found');
     }
 
+    // Create FormData to handle file upload
+    const formData = new FormData();
+
+    // Append all user data fields
+    Object.keys(userData).forEach(key => {
+      if (userData[key] !== null && userData[key] !== undefined) {
+        formData.append(key, userData[key]);
+      }
+    });
+
+    // Append profile image if provided
+    if (profileImage) {
+      formData.append('profile_image', profileImage);
+    }
+
     const response = await fetch(`${API_URL}/users/register`, {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json',
+        // Don't set Content-Type - browser will set it automatically with boundary for multipart/form-data
       },
-      body: JSON.stringify(userData),
+      body: formData,
     });
 
     const data = await response.json();
