@@ -12,7 +12,6 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
   const location = useLocation();
   const [openDropdowns, setOpenDropdowns] = useState({
     userManagement: false,
-    equipmentManagement: false,
   });
 
   const toggleDropdown = (dropdown) => {
@@ -114,44 +113,15 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
           {/* Equipment Management */}
           <li className="sidebar__item">
-            <div
-              className={`sidebar__link sidebar__link--dropdown ${
-                isDropdownActive(['/dashboard/all_aerobic', '/dashboard/all_equipments']) ? 'sidebar__link--active' : ''
-              }`}
-              onClick={() => toggleDropdown('equipmentManagement')}
+            <Link
+              to="/dashboard/equipment"
+              className={`sidebar__link ${isLinkActive('/dashboard/equipment') ? 'sidebar__link--active' : ''}`}
             >
               <span className="sidebar__icon">
                 <CgGym />
               </span>
               <span className="sidebar__label">Equipment</span>
-              <span
-                className={`sidebar__arrow ${
-                  openDropdowns.equipmentManagement ? 'sidebar__arrow--open' : ''
-                }`}
-              >
-                ▼
-              </span>
-            </div>
-            {openDropdowns.equipmentManagement && (
-              <ul className="sidebar__submenu">
-                <li className="sidebar__submenu-item">
-                  <Link 
-                    to="/dashboard/all_aerobic" 
-                    className={`sidebar__submenu-link ${isLinkActive('/dashboard/all_aerobic') ? 'sidebar__submenu-link--active' : ''}`}
-                  >
-                    Aerobic Equipment
-                  </Link>
-                </li>
-                <li className="sidebar__submenu-item">
-                  <Link 
-                    to="/dashboard/all_equipments" 
-                    className={`sidebar__submenu-link ${isLinkActive('/dashboard/all_equipments') ? 'sidebar__submenu-link--active' : ''}`}
-                  >
-                    Exercise Equipment
-                  </Link>
-                </li>
-              </ul>
-            )}
+            </Link>
           </li>
 
           {/* Support */}

@@ -5,10 +5,12 @@ import Login from './pages/auth/Login';
 
 // Dashboard child pages
 import Overview from './pages/dashboard/overview/Overview';
-import AllAerobic from './pages/dashboard/allAerobic/AllAerobic';
-import AllEquipments from './pages/dashboard/allEquipments/AllEquipments';
+import Equipment from './pages/dashboard/equipment/Equipment';
 import Support from './pages/dashboard/support/Support';
 
+// Legacy imports (kept for backward compatibility if needed)
+import AllAerobic from './pages/dashboard/allAerobic/AllAerobic';
+import AllEquipments from './pages/dashboard/allEquipments/AllEquipments';
 import AddAerobic from './pages/dashboard/addAerobic/AddAerobic';
 import AddEquipment from './pages/dashboard/addEquipment/AddEquipment';
 import AllUsers from './pages/dashboard/allUsers/AllUsers';
@@ -50,13 +52,19 @@ const App = () => {
         <Route index element={<Overview />} /> {/* /dashboard */}
         <Route path="overview" element={<Overview />} />
         <Route path="all_users" element={<AllUsers />} />
+
+        {/* Unified Equipment Management */}
+        <Route path="equipment" element={<Equipment />} />
+
+        {/* Legacy Routes (kept for backward compatibility) */}
         <Route path="all_aerobic" element={<AllAerobic />} />
         <Route path="all_equipments" element={<AllEquipments />} />
+        <Route path="add_aerobic" element={<AddAerobic />} />
+        <Route path="add_equipment" element={<AddEquipment />} />
+
         <Route path="support" element={<Support />} />
         <Route path="profile" element={<Profile/>} />
         <Route path="profile/edit" element={<EditProfile />} />
-        <Route path="add_aerobic" element={<AddAerobic />} />
-        <Route path="add_equipment" element={<AddEquipment />} />
         <Route path="add-user" element={<AddUser />} />
         <Route path="user/:id" element={<UserProfile />} />
         <Route path="user/:id/edit" element={<EditUserProfile />} />
