@@ -17,7 +17,8 @@ const Overview = () => {
 
   const [equipmentsData, setEquipmentsData] = useState([
     { label: 'Aerobic Equipments', value: 0 },
-    { label: 'Exercise Equipments', value: 0 }
+    { label: 'Machine Equipments', value: 0 },
+    { label: 'Free Weight Equipments', value: 0 }
   ]);
 
   const [memberChartData, setMemberChartData] = useState([]);
@@ -60,11 +61,13 @@ const Overview = () => {
       if (equipmentResponse.success && equipmentResponse.data) {
         const equipments = equipmentResponse.data || [];
         const aerobic = equipments.filter(eq => eq.category === 'Aerobic').length;
-        const exercise = equipments.filter(eq => eq.category === 'Exercise').length;
+        const machine = equipments.filter(eq => eq.category === 'Machine').length;
+        const freeWeight = equipments.filter(eq => eq.category === 'Free Weight').length;
 
         setEquipmentsData([
           { label: 'Aerobic Equipments', value: aerobic },
-          { label: 'Exercise Equipments', value: exercise }
+          { label: 'Machine Equipments', value: machine },
+          { label: 'Free Weight Equipments', value: freeWeight }
         ]);
 
         // Generate equipment chart data - group by month

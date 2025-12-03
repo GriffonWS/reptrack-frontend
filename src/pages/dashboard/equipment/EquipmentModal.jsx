@@ -10,7 +10,7 @@ const EquipmentModal = ({ equipment, allEquipments = [], onClose, onSave }) => {
   const [formData, setFormData] = useState({
     equipment_name: '',
     equipment_number: '',
-    category: 'Exercise',
+    category: 'Machine',
   });
 
   const [equipmentImage, setEquipmentImage] = useState(null);
@@ -202,8 +202,9 @@ const EquipmentModal = ({ equipment, allEquipments = [], onClose, onSave }) => {
               className="equipment-modal__input"
               required
             >
-              <option value="Exercise">Exercise</option>
               <option value="Aerobic">Aerobic</option>
+              <option value="Machine">Machine</option>
+              <option value="Free Weight">Free Weight</option>
             </select>
           </div>
 

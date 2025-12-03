@@ -8,33 +8,33 @@ import Loader from '../../../components/Loader/Loader';
 
 const AllEquipments = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [exerciseEquipments, setExerciseEquipments] = useState([]);
+  const [machineEquipments, setMachineEquipments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchExerciseEquipment();
+    fetchMachineEquipment();
   }, []);
 
-  const fetchExerciseEquipment = async () => {
+  const fetchMachineEquipment = async () => {
     try {
       setLoading(true);
       setError(null);
-      const response = await getEquipmentByCategory('Exercise');
+      const response = await getEquipmentByCategory('Machine');
 
       if (response.success && Array.isArray(response.data)) {
-        setExerciseEquipments(response.data);
+        setMachineEquipments(response.data);
       } else {
         setError('Invalid response format from server');
       }
     } catch (err) {
-      setError(err.message || 'Failed to load exercise equipment');
+      setError(err.message || 'Failed to load machine equipment');
     } finally {
       setLoading(false);
     }
   };
 
-  const filteredEquipments = exerciseEquipments.filter(equipment =>
+  const filteredEquipments = machineEquipments.filter(equipment =>
     equipment.equipment_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
     equipment.equipment_number.toLowerCase().includes(searchTerm.toLowerCase())
   );

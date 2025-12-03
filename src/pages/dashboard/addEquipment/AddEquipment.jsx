@@ -9,7 +9,7 @@ const AddEquipment = () => {
   const [formData, setFormData] = useState({
     equipment_name: '',
     equipment_number: '',
-    category: 'Exercise'
+    category: 'Machine'
   });
 
   const [equipmentImage, setEquipmentImage] = useState(null);
@@ -179,8 +179,9 @@ const AddEquipment = () => {
                 className="addequip__input"
                 required
               >
-                <option value="Exercise">Exercise</option>
                 <option value="Aerobic">Aerobic</option>
+                <option value="Machine">Machine</option>
+                <option value="Free Weight">Free Weight</option>
               </select>
             </div>
           </div>

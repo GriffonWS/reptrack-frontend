@@ -25,7 +25,8 @@ const Equipment = () => {
   const TABS = [
     { label: 'ALL', value: 'ALL' },
     { label: 'Aerobic', value: 'Aerobic' },
-    { label: 'Exercise', value: 'Exercise' },
+    { label: 'Machine', value: 'Machine' },
+    { label: 'Free Weight', value: 'Free Weight' },
   ];
 
   // Fetch all equipment on component mount

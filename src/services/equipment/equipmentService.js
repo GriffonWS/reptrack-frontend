@@ -48,7 +48,7 @@ export const getAllEquipments = async () => {
 
 /**
  * Get equipment by category
- * @param {string} category - Category name (Aerobic or Exercise)
+ * @param {string} category - Category name (Aerobic, Machine, or Free Weight)
  * @returns {Promise} Filtered equipment by category
  */
 export const getEquipmentByCategory = async (category) => {
