@@ -26,6 +26,7 @@ const EditUserProfile = () => {
 
   const [profileImage, setProfileImage] = useState(null);
   const [previewImage, setPreviewImage] = useState(null);
+  const [currentProfileImage, setCurrentProfileImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [errors, setErrors] = useState({});
@@ -63,6 +64,12 @@ const EditUserProfile = () => {
           dateOfJoining: formatDate(user.dateOfJoining),
           active: user.active ?? true
         });
+
+        // Set current profile image
+        if (user.profileImage) {
+          setCurrentProfileImage(user.profileImage);
+          setPreviewImage(user.profileImage);
+        }
       }
     } catch (err) {
       toast.error(err.message || 'Failed to fetch user details');
@@ -117,11 +124,18 @@ const EditUserProfile = () => {
       newErrors.email = 'Invalid email format';
     }
 
-    // Phone validation
+    // Phone validation - accepts 10 digits or phone with country code (+91 or +1)
     if (!formData.phone.trim()) {
       newErrors.phone = 'Phone number is required';
-    } else if (!/^\d{10}$/.test(formData.phone.trim())) {
-      newErrors.phone = 'Phone number must be 10 digits';
+    } else {
+      const phoneStr = formData.phone.trim();
+      // Check if it's a valid phone number (with or without country code)
+      const isValidWithCountryCode = /^\+\d{1,3}\d{10}$/.test(phoneStr); // +1 or +91 followed by 10 digits
+      const isValidWithoutCountryCode = /^\d{10}$/.test(phoneStr); // Just 10 digits
+
+      if (!isValidWithCountryCode && !isValidWithoutCountryCode) {
+        newErrors.phone = 'Phone number must be 10 digits or include country code (e.g., +11234567890)';
+      }
     }
 
     // Subscription Type validation
@@ -182,7 +196,7 @@ const EditUserProfile = () => {
         active: formData.active
       };
 
-      const response = await updateUser(id, userData);
+      const response = await updateUser(id, userData, profileImage);
 
       if (response.success) {
         toast.success('User updated successfully!');
